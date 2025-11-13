@@ -1,0 +1,26 @@
+package com.example.E_CommerceSCD.Controllers;
+
+import com.example.E_CommerceSCD.DTOs.ChatRequestDTO;
+import com.example.E_CommerceSCD.DTOs.ChatResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/chat")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+@PreAuthorize("hasRole('USER')")
+public class ChatBotController {
+
+    private final AiChatService aiChatService;
+
+    @PostMapping
+    public ResponseEntity<ChatResponseDTO> chatWithAi(
+            @RequestBody ChatRequestDTO chatRequest
+    ) {
+        String response = aiChatService.getChatResponse(chatRequest.getPrompt());
+        return ResponseEntity.ok(new ChatResponseDTO(response));
+    }
+}
