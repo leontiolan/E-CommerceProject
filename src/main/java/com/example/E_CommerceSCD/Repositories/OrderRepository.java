@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByChronologicalUserOrder(User user);
+    List<Order> findByUserOrderByOrderDateDesc(User user);
 }

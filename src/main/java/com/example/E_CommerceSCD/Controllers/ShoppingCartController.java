@@ -3,6 +3,7 @@ package com.example.E_CommerceSCD.Controllers;
 import com.example.E_CommerceSCD.DTOs.CartAddItemDTO;
 import com.example.E_CommerceSCD.DTOs.CartUpdateQuantityDTO;
 import com.example.E_CommerceSCD.DTOs.ShoppingCartDTO;
+import com.example.E_CommerceSCD.Services.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +31,7 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/items/{cartItemId}")
-    public ResponseEntity<ShoppingCartResponseDto> updateItemQuantity(
+    public ResponseEntity<ShoppingCartDTO> updateItemQuantity(
             @PathVariable Long cartItemId,
             @RequestBody CartUpdateQuantityDTO updateDto
     ) {

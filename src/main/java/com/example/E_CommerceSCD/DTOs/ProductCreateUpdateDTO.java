@@ -14,5 +14,5 @@ public class ProductCreateUpdateDTO {
     private String description;
     private Double price;
     private int stockQuantity;
-    private int categoryId;
+    private Long categoryId;
 }

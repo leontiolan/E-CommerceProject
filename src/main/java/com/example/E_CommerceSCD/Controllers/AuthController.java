@@ -3,6 +3,7 @@ package com.example.E_CommerceSCD.Controllers;
 import com.example.E_CommerceSCD.DTOs.AuthResponseDTO;
 import com.example.E_CommerceSCD.DTOs.LoginDTO;
 import com.example.E_CommerceSCD.DTOs.RegisterDTO;
+import com.example.E_CommerceSCD.Services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
