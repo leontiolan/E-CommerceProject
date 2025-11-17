@@ -18,16 +18,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product name", nullable = false, length = 100)
+    @Column(name = "product_name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "product price", nullable = false)
+    @Column(name = "product_price", nullable = false)
     private double price;
 
-    @Column(name = "product description",length = 1500)
+    @Column(name = "product_description",length = 1500)
     private String description;
 
-    @Column(name = "product stockQuantity",nullable = false)
+    @Column(name = "product_stockQuantity",nullable = false)
     private int stockQuantity;
 
 

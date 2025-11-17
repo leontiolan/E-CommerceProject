@@ -25,18 +25,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "usernames",nullable = false, unique = true)
+    @Column(name = "username",nullable = false, unique = true)
     private String username;
 
     @Email
-    @Column(name = "emails",nullable = false, unique = true)
+    @Column(name = "email",nullable = false, unique = true)
     private String email;
 
-    @Column(name = "passwords",nullable = false)
+    @Column(name = "password",nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "roles",nullable = false)
+    @Column(name = "role",nullable = false)
     private Role role;
 
 
