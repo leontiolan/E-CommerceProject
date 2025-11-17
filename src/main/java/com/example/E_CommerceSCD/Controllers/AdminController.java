@@ -25,6 +25,7 @@ public class AdminController {
     private final UserService userService;
 
     // --- Product CRUD ---
+    // (createProduct, updateProduct, deleteProduct... routes are unchanged)
     @PostMapping("/products")
     public ResponseEntity<ProductDetailDTO> createProduct(
             @RequestBody ProductCreateUpdateDTO createDto
@@ -46,7 +47,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // --- Category CRUD ---
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(
             @RequestBody CategoryCreateUpdateDTO createDto
@@ -68,7 +68,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // --- Management ---
     @GetMapping("/orders")
     public ResponseEntity<List<OrderSummaryDTO>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
@@ -85,5 +84,10 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDetailAdminDTO> getUserByIdForAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserDetailsForAdmin(id));
     }
 }
