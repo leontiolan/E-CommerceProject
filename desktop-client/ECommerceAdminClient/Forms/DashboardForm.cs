@@ -38,7 +38,7 @@ namespace ECommerceAdminClient.Forms
             grid.ReadOnly = true;
             grid.BackgroundColor = System.Drawing.Color.White;
             grid.BorderStyle = BorderStyle.None;
-            grid.RowHeadersVisible = false; // Cleaner look
+            grid.RowHeadersVisible = false;
         }
 
         // --- LOAD DATA (Form Load) ---
@@ -47,7 +47,6 @@ namespace ECommerceAdminClient.Forms
             await LoadAllData();
         }
 
-        // Helper method to refresh all grids
         private async Task LoadAllData()
         {
             try
@@ -55,7 +54,6 @@ namespace ECommerceAdminClient.Forms
                 // 1. Load Products
                 var products = await _apiService.GetAllProductsAsync();
                 gridProducts.DataSource = products;
-                // Hide nested object columns if they exist to prevent clutter
                 if (gridProducts.Columns["Category"] != null)
                     gridProducts.Columns["Category"].Visible = false;
 
@@ -79,13 +77,11 @@ namespace ECommerceAdminClient.Forms
         // PRODUCT ACTIONS
         // =========================
 
-        // 1. REFRESH PRODUCTS (The logic you were missing)
         private async void btnRefreshProd_Click(object sender, EventArgs e)
         {
             await LoadAllData();
         }
 
-        // 2. ADD PRODUCT
         private async void btnAddProd_Click(object sender, EventArgs e)
         {
             using (var form = new ProductEditorForm(null))
@@ -106,7 +102,6 @@ namespace ECommerceAdminClient.Forms
             }
         }
 
-        // 3. EDIT PRODUCT
         private async void btnEditProd_Click(object sender, EventArgs e)
         {
             if (gridProducts.SelectedRows.Count == 0)
@@ -122,19 +117,12 @@ namespace ECommerceAdminClient.Forms
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     bool success = await _apiService.UpdateProductAsync(selected.Id.Value, form.ProductResult);
-                    if (success)
-                    {
-                        await LoadAllData();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to update product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    if (success) await LoadAllData();
+                    else MessageBox.Show("Failed to update product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // 4. DELETE PRODUCT
         private async void btnDeleteProd_Click(object sender, EventArgs e)
         {
             if (gridProducts.SelectedRows.Count == 0)
@@ -148,14 +136,8 @@ namespace ECommerceAdminClient.Forms
             if (MessageBox.Show($"Are you sure you want to delete '{selected.Name}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 bool success = await _apiService.DeleteProductAsync(selected.Id.Value);
-                if (success)
-                {
-                    await LoadAllData();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to delete product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                if (success) await LoadAllData();
+                else MessageBox.Show("Failed to delete product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -212,6 +194,12 @@ namespace ECommerceAdminClient.Forms
         // USER ACTIONS
         // =========================
 
+        private async void btnRefreshUser_Click(object sender, EventArgs e)
+        {
+            // NEW: Button logic to refresh user list
+            await LoadAllData();
+        }
+
         private async void btnViewUser_Click(object sender, EventArgs e)
         {
             if (gridUsers.SelectedRows.Count == 0) return;
@@ -220,22 +208,17 @@ namespace ECommerceAdminClient.Forms
 
             try
             {
-                // 1. Fetch full details (including orders)
                 var userDetails = await _apiService.GetUserDetailsAsync(user.Id);
 
-                // 2. Open the Details Form (Ensure you have created UserDetailsForm!)
-                   using (var form = new UserDetailsForm(userDetails))
-                   {
-                       form.ShowDialog();
-                   }
-                
-                MessageBox.Show($"Details fetched for {userDetails.Username}. (UserDetailsForm not yet implemented)");
+                using (var form = new UserDetailsForm(userDetails))
+                {
+                    form.ShowDialog();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to load user details: " + ex.Message);
             }
         }
-
     }
 }

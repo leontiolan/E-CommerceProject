@@ -48,7 +48,6 @@ namespace ECommerceAdminClient.Services
                 }
                 else
                 {
-                    // You could parse the error message here if the backend sends one
                     MessageBox.Show("Login Failed. Please check your username and password.");
                 }
                 return false;
@@ -74,8 +73,6 @@ namespace ECommerceAdminClient.Services
                 }
                 else
                 {
-                    // If status is 400 or 500 (e.g. Duplicate Username)
-                    // Ideally, parse the JSON error response from Spring Boot
                     string errorBody = await response.Content.ReadAsStringAsync();
                     MessageBox.Show($"Registration Failed: {errorBody}", "Server Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
@@ -88,7 +85,6 @@ namespace ECommerceAdminClient.Services
             }
         }
 
-        // ... (The rest of your CRUD methods: GetAllProductsAsync, CreateProductAsync, etc. stay the same) ...
 
         public async Task<List<ProductDTO>> GetAllProductsAsync()
         {

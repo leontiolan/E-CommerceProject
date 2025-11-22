@@ -74,6 +74,7 @@ namespace ECommerceAdminClient.Forms
                         txtUsername.Text = registerForm.RegisteredUsername;
                         txtPassword.Focus();
                     }
+                }
             }
         }
     }

@@ -69,35 +69,49 @@ namespace ECommerceAdminClient.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // 1. Validate
+            // 1. Validation: Check for empty text fields
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
             {
-                MessageBox.Show("Name and Price are required.");
+                MessageBox.Show("Name and Price are required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Map Input to DTO
+            // 2. Validation: Check if a category is actually selected
+            if (cmbCategory.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a category. If none exist, create one first in the Categories tab.",
+                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 3. Map Input to DTO
             ProductResult.Name = txtName.Text;
             ProductResult.Description = txtDescription.Text;
 
+            // Safe parsing for numbers
             if (double.TryParse(txtPrice.Text, out double price))
                 ProductResult.Price = price;
+            else
+                ProductResult.Price = 0; // Or show error
 
             if (int.TryParse(txtStock.Text, out int stock))
                 ProductResult.StockQuantity = stock;
-
-            // 3. Get Category ID from Dropdown
-            if (cmbCategory.SelectedValue != null)
-            {
-                ProductResult.CategoryId = (long)cmbCategory.SelectedValue;
-            }
             else
+                ProductResult.StockQuantity = 0;
+
+            // 4. Safe ID Access: Now we know SelectedValue is not null
+            try
             {
-                MessageBox.Show("Please select a category.");
+                // The 'long' cast might fail if SelectedValue is not what we expect, so wrapping in try-catch is safest
+                ProductResult.CategoryId = Convert.ToInt64(cmbCategory.SelectedValue);
+            }
+            catch
+            {
+                MessageBox.Show("Error reading Category selection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 4. Close with success
+            // 5. Close with success
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
