@@ -24,7 +24,7 @@ public class UserService {
     private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Current user not found"));

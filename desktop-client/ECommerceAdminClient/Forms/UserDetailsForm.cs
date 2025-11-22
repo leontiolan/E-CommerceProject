@@ -88,6 +88,7 @@ namespace ECommerceAdminClient.Forms
         private void UserDetailsForm_Load(object sender, EventArgs e)
         {
 
+
         }
     }
 }

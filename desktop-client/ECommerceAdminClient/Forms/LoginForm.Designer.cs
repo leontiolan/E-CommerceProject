@@ -2,21 +2,11 @@
 {
     partial class LoginForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -27,6 +17,7 @@
             this.txtUsername = new MaterialSkin.Controls.MaterialTextBox();
             this.txtPassword = new MaterialSkin.Controls.MaterialTextBox();
             this.btnLogin = new MaterialSkin.Controls.MaterialButton();
+            this.btnGoToRegister = new MaterialSkin.Controls.MaterialButton(); // New Button
             this.SuspendLayout();
             // 
             // txtUsername
@@ -81,11 +72,33 @@
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
+            // btnGoToRegister
+            // 
+            this.btnGoToRegister.AutoSize = false;
+            this.btnGoToRegister.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnGoToRegister.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnGoToRegister.Depth = 0;
+            this.btnGoToRegister.HighEmphasis = false; // Less emphasis than Login
+            this.btnGoToRegister.Icon = null;
+            this.btnGoToRegister.Location = new System.Drawing.Point(50, 310);
+            this.btnGoToRegister.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnGoToRegister.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnGoToRegister.Name = "btnGoToRegister";
+            this.btnGoToRegister.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnGoToRegister.Size = new System.Drawing.Size(300, 36);
+            this.btnGoToRegister.TabIndex = 3;
+            this.btnGoToRegister.Text = "Create Admin Account";
+            this.btnGoToRegister.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnGoToRegister.UseAccentColor = false;
+            this.btnGoToRegister.UseVisualStyleBackColor = true;
+            this.btnGoToRegister.Click += new System.EventHandler(this.btnGoToRegister_Click);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(400, 350);
+            this.ClientSize = new System.Drawing.Size(400, 400); // Slightly taller
+            this.Controls.Add(this.btnGoToRegister);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUsername);
@@ -98,9 +111,9 @@
 
         #endregion
 
-        // These declarations allow the other file to see the controls
         private MaterialSkin.Controls.MaterialTextBox txtUsername;
         private MaterialSkin.Controls.MaterialTextBox txtPassword;
         private MaterialSkin.Controls.MaterialButton btnLogin;
+        private MaterialSkin.Controls.MaterialButton btnGoToRegister;
     }
 }

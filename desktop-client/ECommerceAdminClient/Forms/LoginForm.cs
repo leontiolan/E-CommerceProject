@@ -6,18 +6,16 @@ using ECommerceAdminClient.Services;
 
 namespace ECommerceAdminClient.Forms
 {
-    // IMPORTANT: This must match the namespace in the Designer file exactly
     public partial class LoginForm : MaterialForm
     {
         private readonly AdminApiService _apiService;
 
         public LoginForm()
         {
-            InitializeComponent(); // This method is defined in the Designer file!
-
+            InitializeComponent();
             _apiService = new AdminApiService();
 
-            // Initialize MaterialSkin Theme
+            // --- MATERIAL SKIN INITIALIZATION ---
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
@@ -28,7 +26,6 @@ namespace ECommerceAdminClient.Forms
             );
         }
 
-        // This method matches the "this.btnLogin.Click += ..." line in the Designer
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text))
@@ -37,7 +34,6 @@ namespace ECommerceAdminClient.Forms
                 return;
             }
 
-            // Disable button to prevent double-clicking
             btnLogin.Enabled = false;
             btnLogin.Text = "LOGGING IN...";
 
@@ -45,23 +41,39 @@ namespace ECommerceAdminClient.Forms
 
             if (success)
             {
-                MessageBox.Show("Login Successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Open Dashboard
+                // Open Dashboard and hide Login
                 DashboardForm dashboard = new DashboardForm();
                 dashboard.Show();
-
-                // Hide Login Form
                 this.Hide();
 
-                // Close app completely when Dashboard is closed
+                // Ensure app closes when Dashboard closes
                 dashboard.FormClosed += (s, args) => this.Close();
             }
             else
             {
-                // Re-enable button on failure
                 btnLogin.Enabled = true;
                 btnLogin.Text = "LOGIN";
+            }
+        }
+
+        private void btnGoToRegister_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            using (var registerForm = new RegisterForm())
+            {
+                var result = registerForm.ShowDialog();
+
+                // If registration was successful, show login again
+                this.Show();
+
+                if (result == DialogResult.OK)
+                {
+                    if (!string.IsNullOrEmpty(registerForm.RegisteredUsername))
+                    {
+                        txtUsername.Text = registerForm.RegisteredUsername;
+                        txtPassword.Focus();
+                    }
             }
         }
     }
