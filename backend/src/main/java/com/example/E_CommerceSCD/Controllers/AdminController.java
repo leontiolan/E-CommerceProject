@@ -68,6 +68,11 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDetailDTO>> getAllProductsForAdmin() {
+        return ResponseEntity.ok(productService.getAllProductsDetailed());
+    }
+
     @GetMapping("/orders")
     public ResponseEntity<List<OrderSummaryDTO>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
