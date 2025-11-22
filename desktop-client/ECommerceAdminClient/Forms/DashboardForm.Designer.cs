@@ -79,7 +79,7 @@
             tabProducts.TabIndex = 0;
             tabProducts.Text = "Products";
             tabProducts.UseVisualStyleBackColor = true;
-            tabProducts.Click += tabPage1_Click;
+            tabProducts.Click += tabProducts_Click;
             // 
             // btnRefreshProd
             // 
