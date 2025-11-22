@@ -1,10 +1,19 @@
-﻿namespace ECommerceAdminClient.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ECommerceAdminClient.Models
 {
     public class OrderSummaryDTO
     {
-        public long id { get; set; }
-        public DateTime orderDate { get; set; }
-        public string status { get; set; }
-        public double orderPrice { get; set; }
+        [JsonPropertyName("id")]
+        public long Id { get; set; }
+
+        [JsonPropertyName("orderDate")]
+        public DateTime OrderDate { get; set; }
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("orderPrice")]
+        public double OrderPrice { get; set; }
     }
 }

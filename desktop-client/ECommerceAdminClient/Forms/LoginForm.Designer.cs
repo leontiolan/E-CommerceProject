@@ -1,14 +1,14 @@
-﻿namespace ECommerceAdminClient
+﻿namespace ECommerceAdminClient.Forms
 {
     partial class LoginForm
     {
         /// <summary>
-        ///  Required designer variable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///  Clean up any resources being used.
+        /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
@@ -22,60 +22,85 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            txtUsername = new TextBox();
-            txtPassword = new TextBox();
-            btnLogin = new Button();
-            SuspendLayout();
+            this.txtUsername = new MaterialSkin.Controls.MaterialTextBox();
+            this.txtPassword = new MaterialSkin.Controls.MaterialTextBox();
+            this.btnLogin = new MaterialSkin.Controls.MaterialButton();
+            this.SuspendLayout();
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(334, 139);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(270, 27);
-            txtUsername.TabIndex = 0;
+            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtUsername.Depth = 0;
+            this.txtUsername.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtUsername.Hint = "Username";
+            this.txtUsername.Location = new System.Drawing.Point(50, 100);
+            this.txtUsername.MaxLength = 50;
+            this.txtUsername.MouseState = MaterialSkin.MouseState.OUT;
+            this.txtUsername.Multiline = false;
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(300, 50);
+            this.txtUsername.TabIndex = 0;
+            this.txtUsername.Text = "";
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(334, 199);
-            txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(273, 27);
-            txtPassword.TabIndex = 1;
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPassword.Depth = 0;
+            this.txtPassword.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtPassword.Hint = "Password";
+            this.txtPassword.Location = new System.Drawing.Point(50, 170);
+            this.txtPassword.MaxLength = 50;
+            this.txtPassword.MouseState = MaterialSkin.MouseState.OUT;
+            this.txtPassword.Multiline = false;
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Password = true;
+            this.txtPassword.Size = new System.Drawing.Size(300, 50);
+            this.txtPassword.TabIndex = 1;
+            this.txtPassword.Text = "";
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(417, 289);
-            btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(135, 48);
-            btnLogin.TabIndex = 2;
-            btnLogin.Text = "Login";
-            btnLogin.UseVisualStyleBackColor = true;
-            btnLogin.Click += btnLogin_Click;
+            this.btnLogin.AutoSize = false;
+            this.btnLogin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnLogin.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnLogin.Depth = 0;
+            this.btnLogin.HighEmphasis = true;
+            this.btnLogin.Icon = null;
+            this.btnLogin.Location = new System.Drawing.Point(50, 250);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnLogin.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnLogin.Size = new System.Drawing.Size(300, 45);
+            this.btnLogin.TabIndex = 2;
+            this.btnLogin.Text = "LOGIN";
+            this.btnLogin.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnLogin.UseAccentColor = false;
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // LoginForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(916, 505);
-            Controls.Add(btnLogin);
-            Controls.Add(txtPassword);
-            Controls.Add(txtUsername);
-            Name = "LoginForm";
-            Text = "Login";
-            Load += LoginForm_Load;
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(400, 350);
+            this.Controls.Add(this.btnLogin);
+            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtUsername);
+            this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Admin Login";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
 
-        private TextBox txtUsername;
-        private TextBox txtPassword;
-        private Button btnLogin;
+        // These declarations allow the other file to see the controls
+        private MaterialSkin.Controls.MaterialTextBox txtUsername;
+        private MaterialSkin.Controls.MaterialTextBox txtPassword;
+        private MaterialSkin.Controls.MaterialButton btnLogin;
     }
 }

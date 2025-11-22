@@ -1,9 +1,16 @@
-﻿namespace ECommerceAdminClient.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ECommerceAdminClient.Models
 {
     public class AuthResponse
     {
-        public string token { get; set; }
-        public string username { get; set; }
-        public string role { get; set; }
+        [JsonPropertyName("token")]
+        public string Token { get; set; }
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
+
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
     }
 }

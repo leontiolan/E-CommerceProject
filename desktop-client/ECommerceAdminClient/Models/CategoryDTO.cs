@@ -1,8 +1,13 @@
-﻿namespace ECommerceAdminClient.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ECommerceAdminClient.Models
 {
     public class CategoryDTO
     {
-        public long? id { get; set; }
-        public string name { get; set; }
+        [JsonPropertyName("email")]
+        public long? Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
     }
 }

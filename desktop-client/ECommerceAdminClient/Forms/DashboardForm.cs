@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using ECommerceAdminClient.Models;
 using ECommerceAdminClient.Services;
-using MaterialSkin.Controls;
 
 namespace ECommerceAdminClient.Forms
 {
@@ -15,9 +15,14 @@ namespace ECommerceAdminClient.Forms
         public DashboardForm()
         {
             InitializeComponent();
+
+            // Theme Setup
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+
             _apiService = new AdminApiService();
 
-            // Basic Grid Setup (Select full row, not just one cell)
+            // Configure Grids
             SetupGrid(gridProducts);
             SetupGrid(gridCategories);
             SetupGrid(gridUsers);
@@ -29,9 +34,10 @@ namespace ECommerceAdminClient.Forms
             grid.MultiSelect = false;
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             grid.ReadOnly = true;
+            grid.BackgroundColor = System.Drawing.Color.White;
+            grid.BorderStyle = BorderStyle.None;
         }
 
-        // --- LOAD DATA ---
         private async void DashboardForm_Load(object sender, EventArgs e)
         {
             await LoadAllData();
@@ -39,53 +45,86 @@ namespace ECommerceAdminClient.Forms
 
         private async Task LoadAllData()
         {
-            // Load Products
-            var products = await _apiService.GetAllProductsAsync();
-            gridProducts.DataSource = products;
-            if (gridProducts.Columns["Category"] != null) gridProducts.Columns["Category"].Visible = false; // Hide complex object
+            try
+            {
+                // 1. Load Products
+                var products = await _apiService.GetAllProductsAsync();
+                gridProducts.DataSource = products;
+                // Hide nested object columns if they exist
+                if (gridProducts.Columns["Category"] != null) gridProducts.Columns["Category"].Visible = false;
 
-            // Load Categories
-            var categories = await _apiService.GetCategoriesAsync();
-            gridCategories.DataSource = categories;
+                // 2. Load Categories
+                var categories = await _apiService.GetCategoriesAsync();
+                gridCategories.DataSource = categories;
 
-            // Load Users
-            var users = await _apiService.GetAllUsersAsync();
-            gridUsers.DataSource = users;
-            if (gridUsers.Columns["Orders"] != null) gridUsers.Columns["Orders"].Visible = false; // Hide list
+                // 3. Load Users
+                var users = await _apiService.GetAllUsersAsync();
+                gridUsers.DataSource = users;
+                if (gridUsers.Columns["Orders"] != null) gridUsers.Columns["Orders"].Visible = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading data: " + ex.Message);
+            }
         }
 
-        // --- PRODUCT EVENTS ---
+        // =========================
+        // PRODUCT ACTIONS
+        // =========================
         private async void btnAddProd_Click(object sender, EventArgs e)
         {
-            // Pass 'null' to indicate Create Mode
+            // Open editor in CREATE mode (null)
             using (var form = new ProductEditorForm(null))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    await _apiService.CreateProductAsync(form.ProductResult);
-                    await LoadAllData();
+                    bool success = await _apiService.CreateProductAsync(form.ProductResult);
+                    if (success)
+                    {
+                        MessageBox.Show("Product Created");
+                        await LoadAllData();
+                    }
+                    else MessageBox.Show("Failed to create product");
+                }
+            }
+        }
+
+        private async void btnEditProd_Click(object sender, EventArgs e)
+        {
+            if (gridProducts.SelectedRows.Count == 0) return;
+            var selected = (ProductDTO)gridProducts.SelectedRows[0].DataBoundItem;
+
+            // Open editor in EDIT mode
+            using (var form = new ProductEditorForm(selected))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    bool success = await _apiService.UpdateProductAsync(selected.Id.Value, form.ProductResult);
+                    if (success) await LoadAllData();
                 }
             }
         }
 
         private async void btnDeleteProd_Click(object sender, EventArgs e)
         {
-            if (gridProducts.SelectedRows.Count > 0)
+            if (gridProducts.SelectedRows.Count == 0) return;
+            var selected = (ProductDTO)gridProducts.SelectedRows[0].DataBoundItem;
+
+            if (MessageBox.Show($"Delete {selected.Name}?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                var product = (ProductDTO)gridProducts.SelectedRows[0].DataBoundItem;
-                if (MessageBox.Show($"Delete {product.Name}?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    await _apiService.DeleteProductAsync(product.Id.Value);
-                    await LoadAllData();
-                }
+                await _apiService.DeleteProductAsync(selected.Id.Value);
+                await LoadAllData();
             }
         }
 
-        // --- CATEGORY EVENTS ---
+        // =========================
+        // CATEGORY ACTIONS
+        // =========================
         private async void btnAddCat_Click(object sender, EventArgs e)
         {
-            // Reuse a generic simple input form or make a CategoryEditorForm
-            string name = Microsoft.VisualBasic.Interaction.InputBox("Enter Category Name:", "New Category");
+            // Simple input box for Category Name
+            string name = Microsoft.VisualBasic.Interaction.InputBox("Enter Category Name:", "New Category", "");
+
             if (!string.IsNullOrWhiteSpace(name))
             {
                 await _apiService.CreateCategoryAsync(name);
@@ -93,21 +132,26 @@ namespace ECommerceAdminClient.Forms
             }
         }
 
-        // --- USER EVENTS ---
+        // Add logic for Edit/Delete Category similar to Products if needed
+
+        // =========================
+        // USER ACTIONS
+        // =========================
         private async void btnViewUser_Click(object sender, EventArgs e)
         {
-            if (gridUsers.SelectedRows.Count > 0)
-            {
-                var user = (UserDTO)gridUsers.SelectedRows[0].DataBoundItem;
-                // Fetch full details (including orders)
-                var userDetails = await _apiService.GetUserDetailsAsync(user.Id);
+            if (gridUsers.SelectedRows.Count == 0) return;
 
-                // Open Detail View
-                using (var form = new UserDetailsForm(userDetails))
-                {
-                    form.ShowDialog();
-                }
-            }
+            var user = (UserDTO)gridUsers.SelectedRows[0].DataBoundItem;
+
+            // 1. Fetch full details (including orders)
+            var userDetails = await _apiService.GetUserDetailsAsync(user.Id);
+
+            // 2. Open UserDetailsForm (Make sure this form exists!)
+            // using (var form = new UserDetailsForm(userDetails))
+            // {
+            //     form.ShowDialog();
+            // }
+            MessageBox.Show("User Details Form not yet created, but data fetched for: " + userDetails.Username);
         }
     }
 }

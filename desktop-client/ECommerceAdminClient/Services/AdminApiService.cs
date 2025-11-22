@@ -42,9 +42,9 @@ namespace ECommerceAdminClient.Services
                     var result = await response.Content.ReadFromJsonAsync<AuthResponse>();
 
                     // SECURITY CHECK: Only allow ADMINs to use this desktop app
-                    if (result?.role == "ADMIN")
+                    if (result?.Role == "ADMIN")
                     {
-                        _jwtToken = result.token;
+                        _jwtToken = result.Token;
                         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
                         return true;
                     }

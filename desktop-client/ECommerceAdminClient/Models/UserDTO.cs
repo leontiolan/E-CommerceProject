@@ -5,12 +5,19 @@ namespace ECommerceAdminClient.Models
 {
     public class UserDTO
     {
-        public long id { get; set; }
-        public string username { get; set; }
+        [JsonPropertyName("id")]
+        public long Id { get; set; }
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
 
         [JsonPropertyName("email")]
-        public string email { get; set; }
-        public string role { get; set; }
-        public List<OrderSummaryDTO> orders { get; set; }
+        public string Email { get; set; }
+
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
+
+        [JsonPropertyName("orders")]
+        public List<OrderSummaryDTO> Orders { get; set; }
     }
 }
