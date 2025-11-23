@@ -63,4 +63,27 @@ public class AuthService {
                 .role(user.getRole())
                 .build();
     }
+
+    public AuthResponseDTO registerAdmin(RegisterDTO request) {
+        var user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ADMIN) // <--- Set Role to ADMIN
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        // Admins might not need a shopping cart, but we create one to avoid null pointer issues if logic is shared
+        ShoppingCart cart = ShoppingCart.builder().user(savedUser).build();
+        shoppingCartRepository.save(cart);
+
+        var token = jwtService.generateToken(user);
+        return AuthResponseDTO.builder()
+                .token(token)
+                .username(user.getUsername())
+                .role(user.getRole())
+                .build();
+    }
+
 }

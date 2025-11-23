@@ -19,8 +19,20 @@ namespace ECommerceAdminClient.Models
         [JsonPropertyName("stockQuantity")]
         public int StockQuantity { get; set; }
 
+        private long _categoryId;
+
         [JsonPropertyName("categoryId")]
-        public long CategoryId { get; set; }
+        public long CategoryId
+        {
+            get
+            {
+                if (Category != null && Category.Id.HasValue)
+                    return Category.Id.Value;
+                return _categoryId;
+            }
+            set => _categoryId = value;
+        }
+
 
         [JsonPropertyName("category")]
         public CategoryDTO Category { get; set; }

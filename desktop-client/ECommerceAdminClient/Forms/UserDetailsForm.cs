@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using ECommerceAdminClient.Models;
 using ECommerceAdminClient.Services;
 using MaterialSkin.Controls;
+using MaterialSkin;
 
 namespace ECommerceAdminClient.Forms
 {
@@ -16,13 +17,13 @@ namespace ECommerceAdminClient.Forms
             InitializeComponent();
             _apiService = new AdminApiService();
             _user = user;
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
 
-            // 1. Populate the Read-Only Textboxes
             txtUsername.Text = user.Username;
             txtEmail.Text = user.Email;
             txtRole.Text = user.Role;
 
-            // 2. Populate the Orders Grid
             SetupOrdersGrid();
         }
 

@@ -55,6 +55,7 @@ namespace ECommerceAdminClient.Forms
 
         private void btnBack_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
     }

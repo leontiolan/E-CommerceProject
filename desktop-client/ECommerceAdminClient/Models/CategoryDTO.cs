@@ -4,7 +4,7 @@ namespace ECommerceAdminClient.Models
 {
     public class CategoryDTO
     {
-        [JsonPropertyName("email")]
+        [JsonPropertyName("id")]
         public long? Id { get; set; }
 
         [JsonPropertyName("name")]
