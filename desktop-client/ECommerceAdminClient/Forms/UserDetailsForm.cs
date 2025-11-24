@@ -16,8 +16,15 @@ namespace ECommerceAdminClient.Forms
         {
             InitializeComponent();
 
+            // Ensure Theme is applied to this form instance
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(
+                Primary.Blue600, Primary.Blue700,
+                Primary.Blue200, Accent.LightBlue200,
+                TextShade.WHITE
+            );
 
             _apiService = new AdminApiService();
             _user = user;
@@ -27,9 +34,11 @@ namespace ECommerceAdminClient.Forms
         {
             if (_user != null)
             {
+                // Populate MaterialTextBox2 fields
                 txtUsername.Text = _user.Username;
                 txtEmail.Text = _user.Email;
                 txtRole.Text = _user.Role;
+
                 SetupOrdersGrid();
             }
             else
@@ -43,6 +52,8 @@ namespace ECommerceAdminClient.Forms
             if (_user.Orders != null && _user.Orders.Count > 0)
             {
                 gridOrders.DataSource = _user.Orders;
+
+                // Grid Styling for consistency
                 gridOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 gridOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 gridOrders.MultiSelect = false;
@@ -77,7 +88,7 @@ namespace ECommerceAdminClient.Forms
                     {
                         MessageBox.Show("Order status updated!");
                         order.Status = "SHIPPED";
-                        gridOrders.Refresh();
+                        gridOrders.Refresh(); // Refresh grid to show new status
                     }
                     else
                     {

@@ -24,6 +24,10 @@ namespace ECommerceAdminClient.Forms
                 Primary.Blue200, Accent.LightBlue200,
                 TextShade.WHITE
             );
+
+            // --- NEW FEATURE: Enable "Enter" key to trigger Login ---
+            this.AcceptButton = btnLogin;
+            // --------------------------------------------------------
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
@@ -43,24 +47,27 @@ namespace ECommerceAdminClient.Forms
             {
                 DashboardForm dashboard = new DashboardForm();
 
+                // --- Handle Dashboard Closing Logic ---
                 dashboard.FormClosed += (s, args) =>
                 {
                     if (dashboard.IsLogout)
                     {
-  
+                        // User clicked Logout: Show Login form again
                         this.Show();
-                        txtPassword.Text = ""; 
+                        txtPassword.Text = ""; // Clear password for security
                         btnLogin.Enabled = true;
                         btnLogin.Text = "LOGIN";
+                        txtUsername.Focus(); // Set focus back to username
                     }
                     else
                     {
+                        // User clicked X (Close): Exit entire application
                         Application.Exit();
                     }
                 };
 
                 dashboard.Show();
-                this.Hide();
+                this.Hide(); // Hide Login window
             }
             else
             {
@@ -77,6 +84,7 @@ namespace ECommerceAdminClient.Forms
             {
                 var result = registerForm.ShowDialog();
 
+                // Show Login form again immediately after closing register
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
 
