@@ -17,7 +17,7 @@
             this.txtUsername = new MaterialSkin.Controls.MaterialTextBox();
             this.txtPassword = new MaterialSkin.Controls.MaterialTextBox();
             this.btnLogin = new MaterialSkin.Controls.MaterialButton();
-            this.btnGoToRegister = new MaterialSkin.Controls.MaterialButton(); // New Button
+            this.btnGoToRegister = new MaterialSkin.Controls.MaterialButton(); 
             this.SuspendLayout();
             // 
             // txtUsername

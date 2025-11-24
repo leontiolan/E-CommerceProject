@@ -52,10 +52,10 @@ namespace ECommerceAdminClient.Forms
             {
                 var categories = await _apiService.GetCategoriesAsync();
                 cmbCategory.DataSource = categories;
-                cmbCategory.DisplayMember = "Name"; // Show the name
-                cmbCategory.ValueMember = "Id";    // Store the ID
+                cmbCategory.DisplayMember = "Name"; 
+                cmbCategory.ValueMember = "Id";    
 
-                // If editing, select the correct category
+
                 if (ProductResult?.CategoryId != 0)
                 {
                     cmbCategory.SelectedValue = ProductResult.CategoryId;
@@ -88,21 +88,19 @@ namespace ECommerceAdminClient.Forms
             ProductResult.Name = txtName.Text;
             ProductResult.Description = txtDescription.Text;
 
-            // Safe parsing for numbers
             if (double.TryParse(txtPrice.Text, out double price))
                 ProductResult.Price = price;
             else
-                ProductResult.Price = 0; // Or show error
+                ProductResult.Price = 0; 
 
             if (int.TryParse(txtStock.Text, out int stock))
                 ProductResult.StockQuantity = stock;
             else
                 ProductResult.StockQuantity = 0;
 
-            // 4. Safe ID Access: Now we know SelectedValue is not null
+
             try
             {
-                // The 'long' cast might fail if SelectedValue is not what we expect, so wrapping in try-catch is safest
                 ProductResult.CategoryId = Convert.ToInt64(cmbCategory.SelectedValue);
             }
             catch
@@ -111,7 +109,6 @@ namespace ECommerceAdminClient.Forms
                 return;
             }
 
-            // 5. Close with success
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

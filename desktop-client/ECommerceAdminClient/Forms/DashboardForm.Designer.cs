@@ -31,7 +31,8 @@
             this.tabUser = new System.Windows.Forms.TabPage();
             this.gridUsers = new System.Windows.Forms.DataGridView();
             this.btnViewUser = new MaterialSkin.Controls.MaterialButton();
-            this.btnRefreshUser = new MaterialSkin.Controls.MaterialButton(); // NEW BUTTON
+            this.btnRefreshUser = new MaterialSkin.Controls.MaterialButton();
+            this.btnLogout = new MaterialSkin.Controls.MaterialButton();
             this.tabControl1.SuspendLayout();
             this.tabProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProducts)).BeginInit();
@@ -49,8 +50,9 @@
             this.tabSelector.Location = new System.Drawing.Point(0, 64);
             this.tabSelector.MouseState = MaterialSkin.MouseState.HOVER;
             this.tabSelector.Name = "tabSelector";
-            this.tabSelector.Size = new System.Drawing.Size(900, 48);
+            this.tabSelector.Size = new System.Drawing.Size(780, 48); // Reduced width to make room for Logout
             this.tabSelector.TabIndex = 1;
+            this.tabSelector.Text = "materialTabSelector1";
             // 
             // tabControl1
             // 
@@ -63,7 +65,7 @@
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(900, 450);
+            this.tabControl1.Size = new System.Drawing.Size(900, 458);
             this.tabControl1.TabIndex = 0;
             // 
             // tabProducts
@@ -77,7 +79,7 @@
             this.tabProducts.Location = new System.Drawing.Point(4, 29);
             this.tabProducts.Name = "tabProducts";
             this.tabProducts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabProducts.Size = new System.Drawing.Size(892, 417);
+            this.tabProducts.Size = new System.Drawing.Size(892, 425);
             this.tabProducts.TabIndex = 0;
             this.tabProducts.Text = "Products";
             // 
@@ -89,69 +91,6 @@
             this.gridProducts.RowHeadersWidth = 51;
             this.gridProducts.Size = new System.Drawing.Size(650, 380);
             this.gridProducts.TabIndex = 0;
-            // 
-            // btnAddProd
-            // 
-            this.btnAddProd.AutoSize = false;
-            this.btnAddProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnAddProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnAddProd.Depth = 0;
-            this.btnAddProd.HighEmphasis = true;
-            this.btnAddProd.Icon = null;
-            this.btnAddProd.Location = new System.Drawing.Point(690, 20);
-            this.btnAddProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnAddProd.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnAddProd.Name = "btnAddProd";
-            this.btnAddProd.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnAddProd.Size = new System.Drawing.Size(180, 36);
-            this.btnAddProd.TabIndex = 5;
-            this.btnAddProd.Text = "Add Product";
-            this.btnAddProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnAddProd.UseAccentColor = false;
-            this.btnAddProd.UseVisualStyleBackColor = true;
-            this.btnAddProd.Click += new System.EventHandler(this.btnAddProd_Click);
-            // 
-            // btnEditProd
-            // 
-            this.btnEditProd.AutoSize = false;
-            this.btnEditProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnEditProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnEditProd.Depth = 0;
-            this.btnEditProd.HighEmphasis = true;
-            this.btnEditProd.Icon = null;
-            this.btnEditProd.Location = new System.Drawing.Point(690, 70);
-            this.btnEditProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnEditProd.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnEditProd.Name = "btnEditProd";
-            this.btnEditProd.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnEditProd.Size = new System.Drawing.Size(180, 36);
-            this.btnEditProd.TabIndex = 6;
-            this.btnEditProd.Text = "Edit Product";
-            this.btnEditProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnEditProd.UseAccentColor = false;
-            this.btnEditProd.UseVisualStyleBackColor = true;
-            this.btnEditProd.Click += new System.EventHandler(this.btnEditProd_Click);
-            // 
-            // btnDeleteProd
-            // 
-            this.btnDeleteProd.AutoSize = false;
-            this.btnDeleteProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDeleteProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnDeleteProd.Depth = 0;
-            this.btnDeleteProd.HighEmphasis = true;
-            this.btnDeleteProd.Icon = null;
-            this.btnDeleteProd.Location = new System.Drawing.Point(690, 120);
-            this.btnDeleteProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnDeleteProd.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnDeleteProd.Name = "btnDeleteProd";
-            this.btnDeleteProd.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnDeleteProd.Size = new System.Drawing.Size(180, 36);
-            this.btnDeleteProd.TabIndex = 7;
-            this.btnDeleteProd.Text = "Delete Product";
-            this.btnDeleteProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnDeleteProd.UseAccentColor = false;
-            this.btnDeleteProd.UseVisualStyleBackColor = true;
-            this.btnDeleteProd.Click += new System.EventHandler(this.btnDeleteProd_Click);
             // 
             // btnRefreshProd
             // 
@@ -174,6 +113,69 @@
             this.btnRefreshProd.UseVisualStyleBackColor = true;
             this.btnRefreshProd.Click += new System.EventHandler(this.btnRefreshProd_Click);
             // 
+            // btnDeleteProd
+            // 
+            this.btnDeleteProd.AutoSize = false;
+            this.btnDeleteProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnDeleteProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnDeleteProd.Depth = 0;
+            this.btnDeleteProd.HighEmphasis = true;
+            this.btnDeleteProd.Icon = null;
+            this.btnDeleteProd.Location = new System.Drawing.Point(690, 120);
+            this.btnDeleteProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnDeleteProd.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnDeleteProd.Name = "btnDeleteProd";
+            this.btnDeleteProd.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnDeleteProd.Size = new System.Drawing.Size(180, 36);
+            this.btnDeleteProd.TabIndex = 7;
+            this.btnDeleteProd.Text = "Delete Product";
+            this.btnDeleteProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnDeleteProd.UseAccentColor = false;
+            this.btnDeleteProd.UseVisualStyleBackColor = true;
+            this.btnDeleteProd.Click += new System.EventHandler(this.btnDeleteProd_Click);
+            // 
+            // btnEditProd
+            // 
+            this.btnEditProd.AutoSize = false;
+            this.btnEditProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnEditProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnEditProd.Depth = 0;
+            this.btnEditProd.HighEmphasis = true;
+            this.btnEditProd.Icon = null;
+            this.btnEditProd.Location = new System.Drawing.Point(690, 70);
+            this.btnEditProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnEditProd.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnEditProd.Name = "btnEditProd";
+            this.btnEditProd.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnEditProd.Size = new System.Drawing.Size(180, 36);
+            this.btnEditProd.TabIndex = 6;
+            this.btnEditProd.Text = "Edit Product";
+            this.btnEditProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnEditProd.UseAccentColor = false;
+            this.btnEditProd.UseVisualStyleBackColor = true;
+            this.btnEditProd.Click += new System.EventHandler(this.btnEditProd_Click);
+            // 
+            // btnAddProd
+            // 
+            this.btnAddProd.AutoSize = false;
+            this.btnAddProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAddProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnAddProd.Depth = 0;
+            this.btnAddProd.HighEmphasis = true;
+            this.btnAddProd.Icon = null;
+            this.btnAddProd.Location = new System.Drawing.Point(690, 20);
+            this.btnAddProd.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnAddProd.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnAddProd.Name = "btnAddProd";
+            this.btnAddProd.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnAddProd.Size = new System.Drawing.Size(180, 36);
+            this.btnAddProd.TabIndex = 5;
+            this.btnAddProd.Text = "Add Product";
+            this.btnAddProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnAddProd.UseAccentColor = false;
+            this.btnAddProd.UseVisualStyleBackColor = true;
+            this.btnAddProd.Click += new System.EventHandler(this.btnAddProd_Click);
+            // 
             // tabCategory
             // 
             this.tabCategory.BackColor = System.Drawing.Color.White;
@@ -185,7 +187,7 @@
             this.tabCategory.Location = new System.Drawing.Point(4, 29);
             this.tabCategory.Name = "tabCategory";
             this.tabCategory.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCategory.Size = new System.Drawing.Size(892, 417);
+            this.tabCategory.Size = new System.Drawing.Size(892, 425);
             this.tabCategory.TabIndex = 1;
             this.tabCategory.Text = "Categories";
             // 
@@ -197,69 +199,6 @@
             this.gridCategories.RowHeadersWidth = 51;
             this.gridCategories.Size = new System.Drawing.Size(650, 380);
             this.gridCategories.TabIndex = 0;
-            // 
-            // btnAddCat
-            // 
-            this.btnAddCat.AutoSize = false;
-            this.btnAddCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnAddCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnAddCat.Depth = 0;
-            this.btnAddCat.HighEmphasis = true;
-            this.btnAddCat.Icon = null;
-            this.btnAddCat.Location = new System.Drawing.Point(690, 20);
-            this.btnAddCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnAddCat.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnAddCat.Name = "btnAddCat";
-            this.btnAddCat.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnAddCat.Size = new System.Drawing.Size(180, 36);
-            this.btnAddCat.TabIndex = 5;
-            this.btnAddCat.Text = "Add Category";
-            this.btnAddCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnAddCat.UseAccentColor = false;
-            this.btnAddCat.UseVisualStyleBackColor = true;
-            this.btnAddCat.Click += new System.EventHandler(this.btnAddCat_Click);
-            // 
-            // btnEditCat
-            // 
-            this.btnEditCat.AutoSize = false;
-            this.btnEditCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnEditCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnEditCat.Depth = 0;
-            this.btnEditCat.HighEmphasis = true;
-            this.btnEditCat.Icon = null;
-            this.btnEditCat.Location = new System.Drawing.Point(690, 70);
-            this.btnEditCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnEditCat.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnEditCat.Name = "btnEditCat";
-            this.btnEditCat.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnEditCat.Size = new System.Drawing.Size(180, 36);
-            this.btnEditCat.TabIndex = 6;
-            this.btnEditCat.Text = "Edit Category";
-            this.btnEditCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnEditCat.UseAccentColor = false;
-            this.btnEditCat.UseVisualStyleBackColor = true;
-            this.btnEditCat.Click += new System.EventHandler(this.btnEditCat_Click);
-            // 
-            // btnDeleteCat
-            // 
-            this.btnDeleteCat.AutoSize = false;
-            this.btnDeleteCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDeleteCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnDeleteCat.Depth = 0;
-            this.btnDeleteCat.HighEmphasis = true;
-            this.btnDeleteCat.Icon = null;
-            this.btnDeleteCat.Location = new System.Drawing.Point(690, 120);
-            this.btnDeleteCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnDeleteCat.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnDeleteCat.Name = "btnDeleteCat";
-            this.btnDeleteCat.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnDeleteCat.Size = new System.Drawing.Size(180, 36);
-            this.btnDeleteCat.TabIndex = 7;
-            this.btnDeleteCat.Text = "Delete Category";
-            this.btnDeleteCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnDeleteCat.UseAccentColor = false;
-            this.btnDeleteCat.UseVisualStyleBackColor = true;
-            this.btnDeleteCat.Click += new System.EventHandler(this.btnDeleteCat_Click);
             // 
             // btnRefreshCat
             // 
@@ -282,6 +221,69 @@
             this.btnRefreshCat.UseVisualStyleBackColor = true;
             this.btnRefreshCat.Click += new System.EventHandler(this.btnRefreshCat_Click);
             // 
+            // btnDeleteCat
+            // 
+            this.btnDeleteCat.AutoSize = false;
+            this.btnDeleteCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnDeleteCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnDeleteCat.Depth = 0;
+            this.btnDeleteCat.HighEmphasis = true;
+            this.btnDeleteCat.Icon = null;
+            this.btnDeleteCat.Location = new System.Drawing.Point(690, 120);
+            this.btnDeleteCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnDeleteCat.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnDeleteCat.Name = "btnDeleteCat";
+            this.btnDeleteCat.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnDeleteCat.Size = new System.Drawing.Size(180, 36);
+            this.btnDeleteCat.TabIndex = 7;
+            this.btnDeleteCat.Text = "Delete Category";
+            this.btnDeleteCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnDeleteCat.UseAccentColor = false;
+            this.btnDeleteCat.UseVisualStyleBackColor = true;
+            this.btnDeleteCat.Click += new System.EventHandler(this.btnDeleteCat_Click);
+            // 
+            // btnEditCat
+            // 
+            this.btnEditCat.AutoSize = false;
+            this.btnEditCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnEditCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnEditCat.Depth = 0;
+            this.btnEditCat.HighEmphasis = true;
+            this.btnEditCat.Icon = null;
+            this.btnEditCat.Location = new System.Drawing.Point(690, 70);
+            this.btnEditCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnEditCat.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnEditCat.Name = "btnEditCat";
+            this.btnEditCat.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnEditCat.Size = new System.Drawing.Size(180, 36);
+            this.btnEditCat.TabIndex = 6;
+            this.btnEditCat.Text = "Edit Category";
+            this.btnEditCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnEditCat.UseAccentColor = false;
+            this.btnEditCat.UseVisualStyleBackColor = true;
+            this.btnEditCat.Click += new System.EventHandler(this.btnEditCat_Click);
+            // 
+            // btnAddCat
+            // 
+            this.btnAddCat.AutoSize = false;
+            this.btnAddCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAddCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnAddCat.Depth = 0;
+            this.btnAddCat.HighEmphasis = true;
+            this.btnAddCat.Icon = null;
+            this.btnAddCat.Location = new System.Drawing.Point(690, 20);
+            this.btnAddCat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnAddCat.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnAddCat.Name = "btnAddCat";
+            this.btnAddCat.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnAddCat.Size = new System.Drawing.Size(180, 36);
+            this.btnAddCat.TabIndex = 5;
+            this.btnAddCat.Text = "Add Category";
+            this.btnAddCat.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnAddCat.UseAccentColor = false;
+            this.btnAddCat.UseVisualStyleBackColor = true;
+            this.btnAddCat.Click += new System.EventHandler(this.btnAddCat_Click);
+            // 
             // tabUser
             // 
             this.tabUser.BackColor = System.Drawing.Color.White;
@@ -291,7 +293,7 @@
             this.tabUser.Location = new System.Drawing.Point(4, 29);
             this.tabUser.Name = "tabUser";
             this.tabUser.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUser.Size = new System.Drawing.Size(892, 417);
+            this.tabUser.Size = new System.Drawing.Size(892, 425);
             this.tabUser.TabIndex = 2;
             this.tabUser.Text = "Users";
             // 
@@ -324,9 +326,9 @@
             this.btnViewUser.UseAccentColor = false;
             this.btnViewUser.UseVisualStyleBackColor = true;
             this.btnViewUser.Click += new System.EventHandler(this.btnViewUser_Click);
-            //
+            // 
             // btnRefreshUser
-            //
+            // 
             this.btnRefreshUser.AutoSize = false;
             this.btnRefreshUser.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRefreshUser.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -346,13 +348,35 @@
             this.btnRefreshUser.UseVisualStyleBackColor = true;
             this.btnRefreshUser.Click += new System.EventHandler(this.btnRefreshUser_Click);
             // 
+            // btnLogout
+            // 
+            this.btnLogout.AutoSize = false;
+            this.btnLogout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnLogout.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnLogout.Depth = 0;
+            this.btnLogout.HighEmphasis = true;
+            this.btnLogout.Icon = null;
+            this.btnLogout.Location = new System.Drawing.Point(790, 70);
+            this.btnLogout.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnLogout.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnLogout.Size = new System.Drawing.Size(100, 36);
+            this.btnLogout.TabIndex = 9;
+            this.btnLogout.Text = "LOGOUT";
+            this.btnLogout.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnLogout.UseAccentColor = true;
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
             // DashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(900, 570);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabSelector);
+            this.Controls.Add(this.tabControl1);
             this.Name = "DashboardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Admin Dashboard";
@@ -368,6 +392,7 @@
             this.tabUser.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -389,6 +414,7 @@
         private MaterialSkin.Controls.MaterialButton btnEditCat;
         private MaterialSkin.Controls.MaterialButton btnAddCat;
         private MaterialSkin.Controls.MaterialButton btnViewUser;
-        private MaterialSkin.Controls.MaterialButton btnRefreshUser; // NEW
+        private MaterialSkin.Controls.MaterialButton btnRefreshUser;
+        private MaterialSkin.Controls.MaterialButton btnLogout;
     }
 }

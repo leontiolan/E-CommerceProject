@@ -41,13 +41,26 @@ namespace ECommerceAdminClient.Forms
 
             if (success)
             {
-                // Open Dashboard and hide Login
                 DashboardForm dashboard = new DashboardForm();
+
+                dashboard.FormClosed += (s, args) =>
+                {
+                    if (dashboard.IsLogout)
+                    {
+  
+                        this.Show();
+                        txtPassword.Text = ""; 
+                        btnLogin.Enabled = true;
+                        btnLogin.Text = "LOGIN";
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+                };
+
                 dashboard.Show();
                 this.Hide();
-
-                // Ensure app closes when Dashboard closes
-                dashboard.FormClosed += (s, args) => this.Close();
             }
             else
             {
@@ -64,8 +77,8 @@ namespace ECommerceAdminClient.Forms
             {
                 var result = registerForm.ShowDialog();
 
-                // If registration was successful, show login again
                 this.Show();
+                this.WindowState = FormWindowState.Normal;
 
                 if (result == DialogResult.OK)
                 {

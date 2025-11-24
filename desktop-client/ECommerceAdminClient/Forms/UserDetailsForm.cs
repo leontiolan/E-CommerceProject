@@ -2,29 +2,40 @@
 using System.Windows.Forms;
 using ECommerceAdminClient.Models;
 using ECommerceAdminClient.Services;
-using MaterialSkin.Controls;
 using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace ECommerceAdminClient.Forms
 {
     public partial class UserDetailsForm : MaterialForm
     {
-        private readonly UserDTO _user; // Store the user data
+        private readonly UserDTO _user;
         private readonly AdminApiService _apiService;
 
         public UserDetailsForm(UserDTO user)
         {
             InitializeComponent();
-            _apiService = new AdminApiService();
-            _user = user;
+
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
 
-            txtUsername.Text = user.Username;
-            txtEmail.Text = user.Email;
-            txtRole.Text = user.Role;
+            _apiService = new AdminApiService();
+            _user = user;
+        }
 
-            SetupOrdersGrid();
+        private void UserDetailsForm_Load(object sender, EventArgs e)
+        {
+            if (_user != null)
+            {
+                txtUsername.Text = _user.Username;
+                txtEmail.Text = _user.Email;
+                txtRole.Text = _user.Role;
+                SetupOrdersGrid();
+            }
+            else
+            {
+                MessageBox.Show("No user data available.");
+            }
         }
 
         private void SetupOrdersGrid()
@@ -36,11 +47,12 @@ namespace ECommerceAdminClient.Forms
                 gridOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 gridOrders.MultiSelect = false;
                 gridOrders.ReadOnly = true;
+                gridOrders.BackgroundColor = System.Drawing.Color.White;
+                gridOrders.BorderStyle = BorderStyle.None;
+                gridOrders.RowHeadersVisible = false;
             }
             else
             {
-                // If no orders, maybe hide the grid or show a message? 
-                // For now, we leave it empty.
                 gridOrders.DataSource = null;
             }
         }
@@ -64,8 +76,6 @@ namespace ECommerceAdminClient.Forms
                     if (success)
                     {
                         MessageBox.Show("Order status updated!");
-
-                        // Update the UI locally to reflect the change immediately
                         order.Status = "SHIPPED";
                         gridOrders.Refresh();
                     }
@@ -84,12 +94,6 @@ namespace ECommerceAdminClient.Forms
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void UserDetailsForm_Load(object sender, EventArgs e)
-        {
-
-
         }
     }
 }

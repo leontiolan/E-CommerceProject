@@ -13,6 +13,9 @@ namespace ECommerceAdminClient.Forms
     {
         private readonly AdminApiService _apiService;
 
+        // Flag to distinguish between Logout and closing via X button
+        public bool IsLogout { get; private set; } = false;
+
         public DashboardForm()
         {
             InitializeComponent();
@@ -71,6 +74,13 @@ namespace ECommerceAdminClient.Forms
             {
                 MessageBox.Show("Error loading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // --- NEW LOGOUT HANDLER ---
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            IsLogout = true;
+            this.Close(); // Close this form, control returns to LoginForm
         }
 
         // =========================
@@ -196,7 +206,6 @@ namespace ECommerceAdminClient.Forms
 
         private async void btnRefreshUser_Click(object sender, EventArgs e)
         {
-            // NEW: Button logic to refresh user list
             await LoadAllData();
         }
 

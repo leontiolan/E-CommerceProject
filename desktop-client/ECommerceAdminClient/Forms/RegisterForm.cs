@@ -16,7 +16,6 @@ namespace ECommerceAdminClient.Forms
             InitializeComponent();
             _apiService = new AdminApiService();
 
-            // Theme Setup
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
         }
@@ -29,11 +28,9 @@ namespace ECommerceAdminClient.Forms
                 return;
             }
 
-            // Disable button
             btnRegister.Enabled = false;
             btnRegister.Text = "Registering...";
 
-            // Call Service
             bool success = await _apiService.RegisterAdminAsync(txtUsername.Text, txtEmail.Text, txtPassword.Text);
 
             if (success)
@@ -42,7 +39,7 @@ namespace ECommerceAdminClient.Forms
 
                 RegisteredUsername = txtUsername.Text;
 
-                this.DialogResult = DialogResult.OK; // Signal success
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
