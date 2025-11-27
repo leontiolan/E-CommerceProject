@@ -15,17 +15,8 @@ namespace ECommerceAdminClient.Forms
         public UserDetailsForm(UserDTO user)
         {
             InitializeComponent();
-
-            // Ensure Theme is applied to this form instance
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(
-                Primary.Blue600, Primary.Blue700,
-                Primary.Blue200, Accent.LightBlue200,
-                TextShade.WHITE
-            );
-
             _apiService = new AdminApiService();
             _user = user;
         }
@@ -34,16 +25,10 @@ namespace ECommerceAdminClient.Forms
         {
             if (_user != null)
             {
-                // Populate MaterialTextBox2 fields
                 txtUsername.Text = _user.Username;
                 txtEmail.Text = _user.Email;
                 txtRole.Text = _user.Role;
-
                 SetupOrdersGrid();
-            }
-            else
-            {
-                MessageBox.Show("No user data available.");
             }
         }
 
@@ -52,8 +37,6 @@ namespace ECommerceAdminClient.Forms
             if (_user.Orders != null && _user.Orders.Count > 0)
             {
                 gridOrders.DataSource = _user.Orders;
-
-                // Grid Styling for consistency
                 gridOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 gridOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 gridOrders.MultiSelect = false;
@@ -73,32 +56,55 @@ namespace ECommerceAdminClient.Forms
             if (gridOrders.SelectedRows.Count > 0)
             {
                 var order = (OrderSummaryDTO)gridOrders.SelectedRows[0].DataBoundItem;
-
-                var confirm = MessageBox.Show(
-                    $"Mark Order #{order.Id} as SHIPPED?",
-                    "Confirm Update",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
+                var confirm = MessageBox.Show($"Mark Order #{order.Id} as SHIPPED?", "Confirm Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (confirm == DialogResult.Yes)
                 {
                     bool success = await _apiService.UpdateOrderStatusAsync(order.Id, "SHIPPED");
-
                     if (success)
                     {
                         MessageBox.Show("Order status updated!");
                         order.Status = "SHIPPED";
-                        gridOrders.Refresh(); // Refresh grid to show new status
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to update order. Check server connection.");
+                        gridOrders.Refresh();
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Please select an order from the list first.");
+                MessageBox.Show("Please select an order first.");
+            }
+        }
+
+        private async void btnViewOrder_Click(object sender, EventArgs e)
+        {
+            if (gridOrders.SelectedRows.Count > 0)
+            {
+                var summary = (OrderSummaryDTO)gridOrders.SelectedRows[0].DataBoundItem;
+
+                try
+                {
+                    var details = await _apiService.GetOrderDetailsAsync(summary.Id);
+
+                    if (details != null)
+                    {
+                        using (var form = new OrderDetailsForm(details))
+                        {
+                            form.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to retrieve details.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error fetching details: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an order first.");
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
@@ -12,35 +13,34 @@ namespace ECommerceAdminClient.Forms
         public ProductDTO ProductResult { get; private set; }
         private readonly AdminApiService _apiService;
 
-        // Constructor accepts a product (for edit) or null (for create)
         public ProductEditorForm(ProductDTO existingProduct = null)
         {
             InitializeComponent();
 
-            // Add to Material Manager so it gets the theme
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
 
             _apiService = new AdminApiService();
 
-            // Load Categories immediately
             LoadCategories();
 
             if (existingProduct != null)
             {
-                // EDIT MODE
                 this.Text = "Edit Product";
                 ProductResult = existingProduct;
 
-                // Populate fields
                 txtName.Text = existingProduct.Name;
                 txtDescription.Text = existingProduct.Description;
                 txtPrice.Text = existingProduct.Price.ToString();
                 txtStock.Text = existingProduct.StockQuantity.ToString();
+
+                if (existingProduct.ImageUrls != null)
+                {
+                    txtImages.Text = string.Join(Environment.NewLine, existingProduct.ImageUrls);
+                }
             }
             else
             {
-                // CREATE MODE
                 this.Text = "New Product";
                 ProductResult = new ProductDTO();
             }
@@ -52,9 +52,8 @@ namespace ECommerceAdminClient.Forms
             {
                 var categories = await _apiService.GetCategoriesAsync();
                 cmbCategory.DataSource = categories;
-                cmbCategory.DisplayMember = "Name"; 
-                cmbCategory.ValueMember = "Id";    
-
+                cmbCategory.DisplayMember = "Name";
+                cmbCategory.ValueMember = "Id";
 
                 if (ProductResult?.CategoryId != 0)
                 {
@@ -69,35 +68,30 @@ namespace ECommerceAdminClient.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // 1. Validation: Check for empty text fields
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))
             {
                 MessageBox.Show("Name and Price are required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Validation: Check if a category is actually selected
             if (cmbCategory.SelectedValue == null)
             {
-                MessageBox.Show("Please select a category. If none exist, create one first in the Categories tab.",
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a category.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 3. Map Input to DTO
             ProductResult.Name = txtName.Text;
             ProductResult.Description = txtDescription.Text;
 
             if (double.TryParse(txtPrice.Text, out double price))
                 ProductResult.Price = price;
             else
-                ProductResult.Price = 0; 
+                ProductResult.Price = 0;
 
             if (int.TryParse(txtStock.Text, out int stock))
                 ProductResult.StockQuantity = stock;
             else
                 ProductResult.StockQuantity = 0;
-
 
             try
             {
@@ -107,6 +101,17 @@ namespace ECommerceAdminClient.Forms
             {
                 MessageBox.Show("Error reading Category selection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtImages.Text))
+            {
+                ProductResult.ImageUrls = new List<string>(
+                    txtImages.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                );
+            }
+            else
+            {
+                ProductResult.ImageUrls = new List<string>();
             }
 
             this.DialogResult = DialogResult.OK;

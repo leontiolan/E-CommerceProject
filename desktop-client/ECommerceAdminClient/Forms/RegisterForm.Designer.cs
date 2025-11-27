@@ -20,9 +20,8 @@
             this.btnRegister = new MaterialSkin.Controls.MaterialButton();
             this.btnBack = new MaterialSkin.Controls.MaterialButton();
             this.SuspendLayout();
-            // 
-            // txtUsername
-            // 
+             
+            // txtUsername 
             this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtUsername.Depth = 0;
             this.txtUsername.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -35,9 +34,8 @@
             this.txtUsername.Size = new System.Drawing.Size(300, 50);
             this.txtUsername.TabIndex = 0;
             this.txtUsername.Text = "";
-            // 
-            // txtEmail
-            // 
+             
+            // txtEmail 
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtEmail.Depth = 0;
             this.txtEmail.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -50,9 +48,8 @@
             this.txtEmail.Size = new System.Drawing.Size(300, 50);
             this.txtEmail.TabIndex = 1;
             this.txtEmail.Text = "";
-            // 
+             
             // txtPassword
-            // 
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPassword.Depth = 0;
             this.txtPassword.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -66,9 +63,8 @@
             this.txtPassword.Size = new System.Drawing.Size(300, 50);
             this.txtPassword.TabIndex = 2;
             this.txtPassword.Text = "";
-            // 
+             
             // btnRegister
-            // 
             this.btnRegister.AutoSize = false;
             this.btnRegister.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRegister.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -87,9 +83,8 @@
             this.btnRegister.UseAccentColor = false;
             this.btnRegister.UseVisualStyleBackColor = true;
             this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
-            // 
+            
             // btnBack
-            // 
             this.btnBack.AutoSize = false;
             this.btnBack.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnBack.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -108,9 +103,8 @@
             this.btnBack.UseAccentColor = false;
             this.btnBack.UseVisualStyleBackColor = true;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
-            // 
+            
             // RegisterForm
-            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 400);

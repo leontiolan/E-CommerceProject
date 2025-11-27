@@ -9,7 +9,7 @@ import com.example.E_CommerceSCD.Repositories.ProductRepository;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable; // Important import
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    // --- UPDATED: Search with Pagination ---
+    // --- SEARCH & PAGINATION ---
     public Page<ProductSummaryDTO> searchProducts(String search, String sort, Long categoryId, Pageable pageable) {
         Specification<Product> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -44,25 +44,25 @@ public class ProductService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        // Note: Sorting is now handled by the Pageable object passed from Controller
         Page<Product> products = productRepository.findAll(spec, pageable);
-
         return products.map(this::mapToSummaryDTO);
     }
 
+    // --- GET DETAILS ---
     public ProductDetailDTO getProductDetails(Long id) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return mapToDetailDTO(p);
     }
 
+    // --- ADMIN: GET ALL ---
     public List<ProductDetailDTO> getAllProductsDetailed() {
         return productRepository.findAll().stream()
                 .map(this::mapToDetailDTO)
                 .collect(Collectors.toList());
     }
 
-    // --- ADMIN METHODS (Unchanged except mapped DTOs) ---
+    // --- ADMIN: CREATE ---
     public ProductDetailDTO createProduct(ProductCreateUpdateDTO dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -74,12 +74,22 @@ public class ProductService {
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(category);
 
-        // Note: Image creation logic would go here if images were sent in DTO
+        // Handle Images
+        if (dto.getImageUrls() != null && !dto.getImageUrls().isEmpty()) {
+            List<ProductImage> images = dto.getImageUrls().stream()
+                    .map(url -> ProductImage.builder()
+                            .imageUrl(url)
+                            .product(product) // Link back to parent
+                            .build())
+                    .collect(Collectors.toList());
+            product.setImages(images);
+        }
 
         Product saved = productRepository.save(product);
         return mapToDetailDTO(saved);
     }
 
+    // --- ADMIN: UPDATE ---
     public ProductDetailDTO updateProduct(Long id, ProductCreateUpdateDTO dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -93,15 +103,31 @@ public class ProductService {
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(category);
 
+        // Update Images
+        if (dto.getImageUrls() != null) {
+            // 1. Clear existing (orphanRemoval=true will delete them from DB)
+            product.getImages().clear();
+
+            // 2. Add new images
+            List<ProductImage> newImages = dto.getImageUrls().stream()
+                    .map(url -> ProductImage.builder()
+                            .imageUrl(url)
+                            .product(product)
+                            .build())
+                    .collect(Collectors.toList());
+
+            product.getImages().addAll(newImages);
+        }
+
         return mapToDetailDTO(productRepository.save(product));
     }
 
+    // --- ADMIN: DELETE ---
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
     // --- MAPPERS ---
-
     private ProductSummaryDTO mapToSummaryDTO(Product p) {
         return ProductSummaryDTO.builder()
                 .id(p.getId())
@@ -111,7 +137,6 @@ public class ProductService {
     }
 
     private ProductDetailDTO mapToDetailDTO(Product p) {
-        // Map images
         List<String> imageUrls = (p.getImages() != null)
                 ? p.getImages().stream().map(ProductImage::getImageUrl).collect(Collectors.toList())
                 : new ArrayList<>();
@@ -123,8 +148,8 @@ public class ProductService {
                 .price(p.getPrice())
                 .stockQuantity(p.getStockQuantity())
                 .category(new CategoryDTO(p.getCategory().getId(), p.getCategory().getName()))
-                .reviewDTOList(Collections.emptyList())
-                .imageURLs(imageUrls) // Set images
+                .reviewDTOList(Collections.emptyList()) // Keep reviews empty for list views to save performance
+                .imageURLs(imageUrls)
                 .build();
     }
 }

@@ -12,22 +12,14 @@ namespace ECommerceAdminClient.Forms
     public partial class DashboardForm : MaterialForm
     {
         private readonly AdminApiService _apiService;
-
-        // Flag to distinguish between Logout and closing via X button
         public bool IsLogout { get; private set; } = false;
 
         public DashboardForm()
         {
             InitializeComponent();
-
-            // --- MATERIAL SKIN SETUP ---
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
-
-            // Initialize the API Service
             _apiService = new AdminApiService();
-
-            // Configure Grids for better UX
             SetupGrid(gridProducts);
             SetupGrid(gridCategories);
             SetupGrid(gridUsers);
@@ -44,7 +36,6 @@ namespace ECommerceAdminClient.Forms
             grid.RowHeadersVisible = false;
         }
 
-        // --- LOAD DATA (Form Load) ---
         private async void DashboardForm_Load(object sender, EventArgs e)
         {
             await LoadAllData();
@@ -54,21 +45,16 @@ namespace ECommerceAdminClient.Forms
         {
             try
             {
-                // 1. Load Products
                 var products = await _apiService.GetAllProductsAsync();
                 gridProducts.DataSource = products;
-                if (gridProducts.Columns["Category"] != null)
-                    gridProducts.Columns["Category"].Visible = false;
+                if (gridProducts.Columns["Category"] != null) gridProducts.Columns["Category"].Visible = false;
 
-                // 2. Load Categories
                 var categories = await _apiService.GetCategoriesAsync();
                 gridCategories.DataSource = categories;
 
-                // 3. Load Users
                 var users = await _apiService.GetAllUsersAsync();
                 gridUsers.DataSource = users;
-                if (gridUsers.Columns["Orders"] != null)
-                    gridUsers.Columns["Orders"].Visible = false;
+                if (gridUsers.Columns["Orders"] != null) gridUsers.Columns["Orders"].Visible = false;
             }
             catch (Exception ex)
             {
@@ -76,158 +62,66 @@ namespace ECommerceAdminClient.Forms
             }
         }
 
-        // --- NEW LOGOUT HANDLER ---
         private void btnLogout_Click(object sender, EventArgs e)
         {
             IsLogout = true;
-            this.Close(); // Close this form, control returns to LoginForm
+            Close();
         }
 
-        // =========================
-        // PRODUCT ACTIONS
-        // =========================
-
-        private async void btnRefreshProd_Click(object sender, EventArgs e)
-        {
-            await LoadAllData();
-        }
-
-        private async void btnAddProd_Click(object sender, EventArgs e)
-        {
-            using (var form = new ProductEditorForm(null))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    bool success = await _apiService.CreateProductAsync(form.ProductResult);
-                    if (success)
-                    {
-                        MessageBox.Show("Product Created Successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadAllData();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to create product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        private async void btnEditProd_Click(object sender, EventArgs e)
-        {
-            if (gridProducts.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Please select a product to edit.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var selected = (ProductDTO)gridProducts.SelectedRows[0].DataBoundItem;
-
-            using (var form = new ProductEditorForm(selected))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    bool success = await _apiService.UpdateProductAsync(selected.Id.Value, form.ProductResult);
-                    if (success) await LoadAllData();
-                    else MessageBox.Show("Failed to update product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private async void btnDeleteProd_Click(object sender, EventArgs e)
-        {
-            if (gridProducts.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Please select a product to delete.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var selected = (ProductDTO)gridProducts.SelectedRows[0].DataBoundItem;
-
-            if (MessageBox.Show($"Are you sure you want to delete '{selected.Name}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                bool success = await _apiService.DeleteProductAsync(selected.Id.Value);
-                if (success) await LoadAllData();
-                else MessageBox.Show("Failed to delete product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // =========================
-        // CATEGORY ACTIONS
-        // =========================
-
-        private async void btnRefreshCat_Click(object sender, EventArgs e)
-        {
-            await LoadAllData();
-        }
-
-        private async void btnAddCat_Click(object sender, EventArgs e)
-        {
-            string name = Microsoft.VisualBasic.Interaction.InputBox("Enter Category Name:", "New Category", "");
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                bool success = await _apiService.CreateCategoryAsync(name);
-                if (success) await LoadAllData();
-                else MessageBox.Show("Failed to create category.");
-            }
-        }
-
-        private async void btnEditCat_Click(object sender, EventArgs e)
-        {
-            if (gridCategories.SelectedRows.Count == 0) return;
-            var selected = (CategoryDTO)gridCategories.SelectedRows[0].DataBoundItem;
-
-            string name = Microsoft.VisualBasic.Interaction.InputBox("Edit Category Name:", "Edit Category", selected.Name);
-
-            if (!string.IsNullOrWhiteSpace(name) && name != selected.Name)
-            {
-                bool success = await _apiService.UpdateCategoryAsync(selected.Id.Value, name);
-                if (success) await LoadAllData();
-                else MessageBox.Show("Failed to update category.");
-            }
-        }
-
-        private async void btnDeleteCat_Click(object sender, EventArgs e)
-        {
-            if (gridCategories.SelectedRows.Count == 0) return;
-            var selected = (CategoryDTO)gridCategories.SelectedRows[0].DataBoundItem;
-
-            if (MessageBox.Show($"Delete Category '{selected.Name}'?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                bool success = await _apiService.DeleteCategoryAsync(selected.Id.Value);
-                if (success) await LoadAllData();
-                else MessageBox.Show("Failed to delete category.");
-            }
-        }
-
-        // =========================
-        // USER ACTIONS
-        // =========================
-
-        private async void btnRefreshUser_Click(object sender, EventArgs e)
-        {
-            await LoadAllData();
-        }
+        private async void btnRefreshUser_Click(object sender, EventArgs e) => await LoadAllData();
 
         private async void btnViewUser_Click(object sender, EventArgs e)
         {
             if (gridUsers.SelectedRows.Count == 0) return;
-
             var user = (UserDTO)gridUsers.SelectedRows[0].DataBoundItem;
-
             try
             {
                 var userDetails = await _apiService.GetUserDetailsAsync(user.Id);
-
-                using (var form = new UserDetailsForm(userDetails))
-                {
-                    form.ShowDialog();
-                }
+                using (var form = new UserDetailsForm(userDetails)) form.ShowDialog();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load user details: " + ex.Message);
+                MessageBox.Show("Failed to load details: " + ex.Message);
             }
         }
+
+        private async void btnBanUser_Click(object sender, EventArgs e)
+        {
+            if (gridUsers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select a user to ban.");
+                return;
+            }
+
+            var user = (UserDTO)gridUsers.SelectedRows[0].DataBoundItem;
+            if (MessageBox.Show($"Are you sure you want to ban {user.Username}?", "Confirm Ban", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                using (var form = new BanUserForm())
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        bool success = await _apiService.BanUserAsync(user.Id, form.BanReason);
+                        if (success)
+                        {
+                            MessageBox.Show("User has been banned.");
+                            await LoadAllData();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to ban user.");
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void btnRefreshProd_Click(object sender, EventArgs e) => await LoadAllData();
+        private async void btnAddProd_Click(object sender, EventArgs e) { using (var f = new ProductEditorForm(null)) if (f.ShowDialog() == DialogResult.OK) if (await _apiService.CreateProductAsync(f.ProductResult)) await LoadAllData(); }
+        private async void btnEditProd_Click(object sender, EventArgs e) { if (gridProducts.SelectedRows.Count > 0) using (var f = new ProductEditorForm((ProductDTO)gridProducts.SelectedRows[0].DataBoundItem)) if (f.ShowDialog() == DialogResult.OK) if (await _apiService.UpdateProductAsync(((ProductDTO)gridProducts.SelectedRows[0].DataBoundItem).Id.Value, f.ProductResult)) await LoadAllData(); }
+        private async void btnDeleteProd_Click(object sender, EventArgs e) { if (gridProducts.SelectedRows.Count > 0 && MessageBox.Show("Delete?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes) if (await _apiService.DeleteProductAsync(((ProductDTO)gridProducts.SelectedRows[0].DataBoundItem).Id.Value)) await LoadAllData(); }
+        private async void btnRefreshCat_Click(object sender, EventArgs e) => await LoadAllData();
+        private async void btnAddCat_Click(object sender, EventArgs e) { string name = Microsoft.VisualBasic.Interaction.InputBox("Name:", "New Category"); if (!string.IsNullOrWhiteSpace(name)) if (await _apiService.CreateCategoryAsync(name)) await LoadAllData(); }
+        private async void btnEditCat_Click(object sender, EventArgs e) { if (gridCategories.SelectedRows.Count > 0) { var c = (CategoryDTO)gridCategories.SelectedRows[0].DataBoundItem; string name = Microsoft.VisualBasic.Interaction.InputBox("Name:", "Edit", c.Name); if (!string.IsNullOrWhiteSpace(name)) if (await _apiService.UpdateCategoryAsync(c.Id.Value, name)) await LoadAllData(); } }
+        private async void btnDeleteCat_Click(object sender, EventArgs e) { if (gridCategories.SelectedRows.Count > 0 && MessageBox.Show("Delete?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes) if (await _apiService.DeleteCategoryAsync(((CategoryDTO)gridCategories.SelectedRows[0].DataBoundItem).Id.Value)) await LoadAllData(); }
     }
 }

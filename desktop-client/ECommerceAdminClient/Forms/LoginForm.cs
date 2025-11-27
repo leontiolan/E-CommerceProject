@@ -15,7 +15,6 @@ namespace ECommerceAdminClient.Forms
             InitializeComponent();
             _apiService = new AdminApiService();
 
-            // --- MATERIAL SKIN INITIALIZATION ---
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
@@ -25,9 +24,7 @@ namespace ECommerceAdminClient.Forms
                 TextShade.WHITE
             );
 
-            // --- NEW FEATURE: Enable "Enter" key to trigger Login ---
             this.AcceptButton = btnLogin;
-            // --------------------------------------------------------
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
@@ -47,27 +44,24 @@ namespace ECommerceAdminClient.Forms
             {
                 DashboardForm dashboard = new DashboardForm();
 
-                // --- Handle Dashboard Closing Logic ---
                 dashboard.FormClosed += (s, args) =>
                 {
                     if (dashboard.IsLogout)
                     {
-                        // User clicked Logout: Show Login form again
                         this.Show();
-                        txtPassword.Text = ""; // Clear password for security
+                        txtPassword.Text = ""; 
                         btnLogin.Enabled = true;
                         btnLogin.Text = "LOGIN";
-                        txtUsername.Focus(); // Set focus back to username
+                        txtUsername.Focus();
                     }
                     else
                     {
-                        // User clicked X (Close): Exit entire application
                         Application.Exit();
                     }
                 };
 
                 dashboard.Show();
-                this.Hide(); // Hide Login window
+                this.Hide();
             }
             else
             {
@@ -84,7 +78,6 @@ namespace ECommerceAdminClient.Forms
             {
                 var result = registerForm.ShowDialog();
 
-                // Show Login form again immediately after closing register
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
 

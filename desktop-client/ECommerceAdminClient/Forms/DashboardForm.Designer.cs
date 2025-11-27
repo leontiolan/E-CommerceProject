@@ -32,6 +32,7 @@
             this.gridUsers = new System.Windows.Forms.DataGridView();
             this.btnViewUser = new MaterialSkin.Controls.MaterialButton();
             this.btnRefreshUser = new MaterialSkin.Controls.MaterialButton();
+            this.btnBanUser = new MaterialSkin.Controls.MaterialButton(); 
             this.btnLogout = new MaterialSkin.Controls.MaterialButton();
             this.tabControl1.SuspendLayout();
             this.tabProducts.SuspendLayout();
@@ -41,21 +42,19 @@
             this.tabUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).BeginInit();
             this.SuspendLayout();
-            // 
+            
             // tabSelector
-            // 
             this.tabSelector.BaseTabControl = this.tabControl1;
             this.tabSelector.Depth = 0;
             this.tabSelector.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.tabSelector.Location = new System.Drawing.Point(0, 64);
             this.tabSelector.MouseState = MaterialSkin.MouseState.HOVER;
             this.tabSelector.Name = "tabSelector";
-            this.tabSelector.Size = new System.Drawing.Size(780, 48); // Reduced width to make room for Logout
+            this.tabSelector.Size = new System.Drawing.Size(780, 48);
             this.tabSelector.TabIndex = 1;
             this.tabSelector.Text = "materialTabSelector1";
-            // 
-            // tabControl1
-            // 
+             
+            // tabControl1 
             this.tabControl1.Controls.Add(this.tabProducts);
             this.tabControl1.Controls.Add(this.tabCategory);
             this.tabControl1.Controls.Add(this.tabUser);
@@ -67,9 +66,8 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(900, 458);
             this.tabControl1.TabIndex = 0;
-            // 
-            // tabProducts
-            // 
+             
+            // tabProducts 
             this.tabProducts.BackColor = System.Drawing.Color.White;
             this.tabProducts.Controls.Add(this.gridProducts);
             this.tabProducts.Controls.Add(this.btnRefreshProd);
@@ -82,18 +80,16 @@
             this.tabProducts.Size = new System.Drawing.Size(892, 425);
             this.tabProducts.TabIndex = 0;
             this.tabProducts.Text = "Products";
-            // 
-            // gridProducts
-            // 
+             
+            // gridProducts 
             this.gridProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridProducts.Location = new System.Drawing.Point(20, 20);
             this.gridProducts.Name = "gridProducts";
             this.gridProducts.RowHeadersWidth = 51;
             this.gridProducts.Size = new System.Drawing.Size(650, 380);
             this.gridProducts.TabIndex = 0;
-            // 
+             
             // btnRefreshProd
-            // 
             this.btnRefreshProd.AutoSize = false;
             this.btnRefreshProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRefreshProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -112,9 +108,8 @@
             this.btnRefreshProd.UseAccentColor = false;
             this.btnRefreshProd.UseVisualStyleBackColor = true;
             this.btnRefreshProd.Click += new System.EventHandler(this.btnRefreshProd_Click);
-            // 
-            // btnDeleteProd
-            // 
+            
+            // btnDeleteProd 
             this.btnDeleteProd.AutoSize = false;
             this.btnDeleteProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnDeleteProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -133,9 +128,8 @@
             this.btnDeleteProd.UseAccentColor = false;
             this.btnDeleteProd.UseVisualStyleBackColor = true;
             this.btnDeleteProd.Click += new System.EventHandler(this.btnDeleteProd_Click);
-            // 
+             
             // btnEditProd
-            // 
             this.btnEditProd.AutoSize = false;
             this.btnEditProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnEditProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -154,9 +148,8 @@
             this.btnEditProd.UseAccentColor = false;
             this.btnEditProd.UseVisualStyleBackColor = true;
             this.btnEditProd.Click += new System.EventHandler(this.btnEditProd_Click);
-            // 
-            // btnAddProd
-            // 
+            
+            // btnAddProd 
             this.btnAddProd.AutoSize = false;
             this.btnAddProd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnAddProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -175,9 +168,8 @@
             this.btnAddProd.UseAccentColor = false;
             this.btnAddProd.UseVisualStyleBackColor = true;
             this.btnAddProd.Click += new System.EventHandler(this.btnAddProd_Click);
-            // 
+            
             // tabCategory
-            // 
             this.tabCategory.BackColor = System.Drawing.Color.White;
             this.tabCategory.Controls.Add(this.gridCategories);
             this.tabCategory.Controls.Add(this.btnRefreshCat);
@@ -190,18 +182,16 @@
             this.tabCategory.Size = new System.Drawing.Size(892, 425);
             this.tabCategory.TabIndex = 1;
             this.tabCategory.Text = "Categories";
-            // 
+            
             // gridCategories
-            // 
             this.gridCategories.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridCategories.Location = new System.Drawing.Point(20, 20);
             this.gridCategories.Name = "gridCategories";
             this.gridCategories.RowHeadersWidth = 51;
             this.gridCategories.Size = new System.Drawing.Size(650, 380);
             this.gridCategories.TabIndex = 0;
-            // 
+            
             // btnRefreshCat
-            // 
             this.btnRefreshCat.AutoSize = false;
             this.btnRefreshCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRefreshCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -220,9 +210,8 @@
             this.btnRefreshCat.UseAccentColor = false;
             this.btnRefreshCat.UseVisualStyleBackColor = true;
             this.btnRefreshCat.Click += new System.EventHandler(this.btnRefreshCat_Click);
-            // 
+            
             // btnDeleteCat
-            // 
             this.btnDeleteCat.AutoSize = false;
             this.btnDeleteCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnDeleteCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -241,9 +230,8 @@
             this.btnDeleteCat.UseAccentColor = false;
             this.btnDeleteCat.UseVisualStyleBackColor = true;
             this.btnDeleteCat.Click += new System.EventHandler(this.btnDeleteCat_Click);
-            // 
+             
             // btnEditCat
-            // 
             this.btnEditCat.AutoSize = false;
             this.btnEditCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnEditCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -262,9 +250,8 @@
             this.btnEditCat.UseAccentColor = false;
             this.btnEditCat.UseVisualStyleBackColor = true;
             this.btnEditCat.Click += new System.EventHandler(this.btnEditCat_Click);
-            // 
-            // btnAddCat
-            // 
+             
+            // btnAddCat 
             this.btnAddCat.AutoSize = false;
             this.btnAddCat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnAddCat.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -283,31 +270,29 @@
             this.btnAddCat.UseAccentColor = false;
             this.btnAddCat.UseVisualStyleBackColor = true;
             this.btnAddCat.Click += new System.EventHandler(this.btnAddCat_Click);
-            // 
+            
             // tabUser
-            // 
             this.tabUser.BackColor = System.Drawing.Color.White;
             this.tabUser.Controls.Add(this.gridUsers);
             this.tabUser.Controls.Add(this.btnViewUser);
             this.tabUser.Controls.Add(this.btnRefreshUser);
+            this.tabUser.Controls.Add(this.btnBanUser);
             this.tabUser.Location = new System.Drawing.Point(4, 29);
             this.tabUser.Name = "tabUser";
             this.tabUser.Padding = new System.Windows.Forms.Padding(3);
             this.tabUser.Size = new System.Drawing.Size(892, 425);
             this.tabUser.TabIndex = 2;
             this.tabUser.Text = "Users";
-            // 
-            // gridUsers
-            // 
+            
+            // gridUsers 
             this.gridUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridUsers.Location = new System.Drawing.Point(20, 20);
             this.gridUsers.Name = "gridUsers";
             this.gridUsers.RowHeadersWidth = 51;
             this.gridUsers.Size = new System.Drawing.Size(650, 380);
             this.gridUsers.TabIndex = 0;
-            // 
+           
             // btnViewUser
-            // 
             this.btnViewUser.AutoSize = false;
             this.btnViewUser.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnViewUser.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -326,9 +311,8 @@
             this.btnViewUser.UseAccentColor = false;
             this.btnViewUser.UseVisualStyleBackColor = true;
             this.btnViewUser.Click += new System.EventHandler(this.btnViewUser_Click);
-            // 
+             
             // btnRefreshUser
-            // 
             this.btnRefreshUser.AutoSize = false;
             this.btnRefreshUser.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnRefreshUser.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -347,9 +331,28 @@
             this.btnRefreshUser.UseAccentColor = false;
             this.btnRefreshUser.UseVisualStyleBackColor = true;
             this.btnRefreshUser.Click += new System.EventHandler(this.btnRefreshUser_Click);
-            // 
+             
+            // btnBanUser
+            this.btnBanUser.AutoSize = false;
+            this.btnBanUser.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnBanUser.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnBanUser.Depth = 0;
+            this.btnBanUser.HighEmphasis = true;
+            this.btnBanUser.Icon = null;
+            this.btnBanUser.Location = new System.Drawing.Point(690, 120);
+            this.btnBanUser.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnBanUser.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnBanUser.Name = "btnBanUser";
+            this.btnBanUser.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnBanUser.Size = new System.Drawing.Size(180, 36);
+            this.btnBanUser.TabIndex = 3;
+            this.btnBanUser.Text = "BAN USER";
+            this.btnBanUser.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnBanUser.UseAccentColor = true;
+            this.btnBanUser.UseVisualStyleBackColor = true;
+            this.btnBanUser.Click += new System.EventHandler(this.btnBanUser_Click);
+           
             // btnLogout
-            // 
             this.btnLogout.AutoSize = false;
             this.btnLogout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnLogout.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
@@ -368,9 +371,8 @@
             this.btnLogout.UseAccentColor = true;
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-            // 
+             
             // DashboardForm
-            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(900, 570);
@@ -392,7 +394,6 @@
             this.tabUser.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -415,6 +416,7 @@
         private MaterialSkin.Controls.MaterialButton btnAddCat;
         private MaterialSkin.Controls.MaterialButton btnViewUser;
         private MaterialSkin.Controls.MaterialButton btnRefreshUser;
+        private MaterialSkin.Controls.MaterialButton btnBanUser;
         private MaterialSkin.Controls.MaterialButton btnLogout;
     }
 }

@@ -21,14 +21,15 @@ namespace ECommerceAdminClient.Services
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            // Re-attach token if it exists (useful when reopening forms)
             if (!string.IsNullOrEmpty(_jwtToken))
             {
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
             }
         }
 
-        // --- AUTH ---
 
+        // AUTHENTICATION
         public async Task<bool> LoginAsync(string username, string password)
         {
             var loginData = new { username, password };
@@ -64,7 +65,6 @@ namespace ECommerceAdminClient.Services
             var registerData = new { username, email, password };
             try
             {
-                // Calling the NEW endpoint we created in the Java backend
                 var response = await _client.PostAsJsonAsync("auth/register-admin", registerData);
 
                 if (response.IsSuccessStatusCode)
@@ -86,6 +86,7 @@ namespace ECommerceAdminClient.Services
         }
 
 
+        // PRODUCT MANAGEMENT
         public async Task<List<ProductDTO>> GetAllProductsAsync()
         {
             return await _client.GetFromJsonAsync<List<ProductDTO>>("admin/products") ?? new List<ProductDTO>();
@@ -109,6 +110,8 @@ namespace ECommerceAdminClient.Services
             return response.IsSuccessStatusCode;
         }
 
+
+        // CATEGORY MANAGEMENT
         public async Task<List<CategoryDTO>> GetCategoriesAsync()
         {
             return await _client.GetFromJsonAsync<List<CategoryDTO>>("categories") ?? new List<CategoryDTO>();
@@ -132,6 +135,7 @@ namespace ECommerceAdminClient.Services
             return response.IsSuccessStatusCode;
         }
 
+        // USER MANAGEMENT (Updated with Ban)
         public async Task<List<UserDTO>> GetAllUsersAsync()
         {
             return await _client.GetFromJsonAsync<List<UserDTO>>("admin/users") ?? new List<UserDTO>();
@@ -142,14 +146,48 @@ namespace ECommerceAdminClient.Services
             return await _client.GetFromJsonAsync<UserDTO>($"admin/users/{id}");
         }
 
+        public async Task<bool> BanUserAsync(long id, string reason)
+        {
+            string encodedReason = Uri.EscapeDataString(reason);
+            var response = await _client.DeleteAsync($"admin/users/{id}?reason={encodedReason}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string error = await response.Content.ReadAsStringAsync();
+                MessageBox.Show($"Failed to ban user: {error}");
+            }
+            return response.IsSuccessStatusCode;
+        }
+
+        // ORDER MANAGEMENT (Updated with Details)
         public async Task<List<OrderSummaryDTO>> GetAllOrdersAsync()
         {
             return await _client.GetFromJsonAsync<List<OrderSummaryDTO>>("admin/orders") ?? new List<OrderSummaryDTO>();
         }
 
+        public async Task<OrderDetailDTO> GetOrderDetailsAsync(long id)
+        {
+            try
+            {
+                return await _client.GetFromJsonAsync<OrderDetailDTO>($"admin/orders/{id}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching order #{id}: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateOrderStatusAsync(long id, string newStatus)
         {
             var response = await _client.PutAsJsonAsync($"admin/orders/{id}/status", new { status = newStatus });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMsg = await response.Content.ReadAsStringAsync();
+                MessageBox.Show($"Update Failed: {errorMsg}", "Logic Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             return response.IsSuccessStatusCode;
         }
     }

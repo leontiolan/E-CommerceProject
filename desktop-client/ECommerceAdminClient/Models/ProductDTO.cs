@@ -5,7 +5,7 @@ namespace ECommerceAdminClient.Models
     public class ProductDTO
     {
         [JsonPropertyName("id")]
-        public long? Id { get; set; } // Nullable because Create doesn't have an ID yet
+        public long? Id { get; set; } 
 
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -36,5 +36,9 @@ namespace ECommerceAdminClient.Models
 
         [JsonPropertyName("category")]
         public CategoryDTO Category { get; set; }
+
+
+        [JsonPropertyName("imageUrls")]
+        public List<string> ImageUrls { get; set; } = new List<string>();
     }
 }
