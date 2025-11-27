@@ -24,6 +24,7 @@ public class UserService {
     private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // ... (Existing getCurrentUser, getCurrentUserProfile, changeUserPassword methods) ...
     public User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
@@ -37,11 +38,9 @@ public class UserService {
 
     public void changeUserPassword(ChangePasswordRequestDTO request) {
         User user = getCurrentUser();
-
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalStateException("Wrong current password");
         }
-
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
@@ -73,6 +72,15 @@ public class UserService {
                 .role(user.getRole())
                 .orders(orders)
                 .build();
+    }
+
+    // --- NEW: Ban User ---
+    public void banUser(Long id, String reason) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setBanned(true);
+        user.setBanReason(reason);
+        userRepository.save(user);
     }
 
     private UserDTO mapToUserDTO(User user) {

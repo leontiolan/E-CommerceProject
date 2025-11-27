@@ -19,4 +19,5 @@ public class ProductDetailDTO {
     private int stockQuantity;
     private CategoryDTO category;
     private List<ReviewDTO> reviewDTOList;
+    private List<String> imageURLs;
 }

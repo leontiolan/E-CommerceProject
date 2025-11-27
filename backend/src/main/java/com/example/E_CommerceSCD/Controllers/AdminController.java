@@ -24,49 +24,35 @@ public class AdminController {
     private final OrderService orderService;
     private final UserService userService;
 
-    // --- Product CRUD ---
-    // (createProduct, updateProduct, deleteProduct... routes are unchanged)
+    // ... (Product and Category CRUD methods unchanged) ...
     @PostMapping("/products")
-    public ResponseEntity<ProductDetailDTO> createProduct(
-            @RequestBody ProductCreateUpdateDTO createDto
-    ) {
+    public ResponseEntity<ProductDetailDTO> createProduct(@RequestBody ProductCreateUpdateDTO createDto) {
         return ResponseEntity.ok(productService.createProduct(createDto));
     }
-
     @PutMapping("/products/{id}")
-    public ResponseEntity<ProductDetailDTO> updateProduct(
-            @PathVariable Long id,
-            @RequestBody ProductCreateUpdateDTO updateDto
-    ) {
+    public ResponseEntity<ProductDetailDTO> updateProduct(@PathVariable Long id, @RequestBody ProductCreateUpdateDTO updateDto) {
         return ResponseEntity.ok(productService.updateProduct(id, updateDto));
     }
-
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
-
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDTO> createCategory(
-            @RequestBody CategoryCreateUpdateDTO createDto
-    ) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryCreateUpdateDTO createDto) {
         return ResponseEntity.ok(categoryService.createCategory(createDto));
     }
-
     @PutMapping("/categories/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(
-            @PathVariable Long id,
-            @RequestBody CategoryCreateUpdateDTO updateDto
-    ) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryCreateUpdateDTO updateDto) {
         return ResponseEntity.ok(categoryService.updateCategory(id, updateDto));
     }
-
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
+
+    // ...
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDetailDTO>> getAllProductsForAdmin() {
@@ -94,5 +80,12 @@ public class AdminController {
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDetailAdminDTO> getUserByIdForAdmin(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserDetailsForAdmin(id));
+    }
+
+    // --- UPDATED: Ban User ---
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> banUser(@PathVariable Long id, @RequestParam(required = false) String reason) {
+        userService.banUser(id, reason != null ? reason : "Banned by Admin");
+        return ResponseEntity.ok().build();
     }
 }

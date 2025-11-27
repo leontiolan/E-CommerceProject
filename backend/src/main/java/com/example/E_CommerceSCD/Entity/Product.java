@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,17 +25,15 @@ public class Product {
     @Column(name = "product_price", nullable = false)
     private double price;
 
-    @Column(name = "product_description",length = 1500)
+    @Column(name = "product_description", length = 1500)
     private String description;
 
-    @Column(name = "product_stockQuantity",nullable = false)
+    @Column(name = "product_stockQuantity", nullable = false)
     private int stockQuantity;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
 
     @OneToMany(
             mappedBy = "product",
@@ -56,4 +55,13 @@ public class Product {
             fetch = FetchType.LAZY
     )
     private List<OrderItem> orderItemList;
+
+    // --- NEW: Multiple Images ---
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<ProductImage> images = new ArrayList<>();
 }

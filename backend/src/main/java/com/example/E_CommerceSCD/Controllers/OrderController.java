@@ -30,4 +30,11 @@ public class OrderController {
     public ResponseEntity<List<OrderSummaryDTO>> getMyOrderHistory() {
         return ResponseEntity.ok(orderService.getOrderHistoryForCurrentUser());
     }
+
+    // --- NEW: Cancel Endpoint ---
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
+        orderService.cancelMyOrder(id);
+        return ResponseEntity.ok().build();
+    }
 }

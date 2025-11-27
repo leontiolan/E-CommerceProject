@@ -5,6 +5,7 @@ import com.example.E_CommerceSCD.DTOs.ReviewDTO;
 import com.example.E_CommerceSCD.Entity.Product;
 import com.example.E_CommerceSCD.Entity.Review;
 import com.example.E_CommerceSCD.Entity.User;
+import com.example.E_CommerceSCD.Repositories.OrderRepository; // Added
 import com.example.E_CommerceSCD.Repositories.ProductRepository;
 import com.example.E_CommerceSCD.Repositories.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final OrderRepository orderRepository; // Injected
 
     public List<ReviewDTO> getReviewsForProduct(Long productId) {
         return reviewRepository.findByProductId(productId).stream()
@@ -33,9 +35,18 @@ public class ReviewService {
     }
 
     public ReviewDTO createReview(CreateReviewDTO dto) {
-        User user = userService.getCurrentUser(); // Gets logged-in user
+        User user = userService.getCurrentUser();
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // --- NEW: Check Eligibility ---
+        boolean hasDeliveredOrder = orderRepository.existsByUserIdAndOrderItemList_ProductIdAndStatus(
+                user.getId(), dto.getProductId(), "DELIVERED");
+
+        if (!hasDeliveredOrder) {
+            throw new RuntimeException("You can only review products from orders that have been DELIVERED.");
+        }
+        // ------------------------------
 
         Review review = new Review();
         review.setRating(dto.getRating());
