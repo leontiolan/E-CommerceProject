@@ -141,6 +141,29 @@ public class OrderService {
                 .orderDate(order.getOrderDate())
                 .status(order.getStatus())
                 .orderPrice(order.getOrderPrice())
+
+                .build();
+    }
+
+    public OrderDetailDTO getOrderDetails(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        List<OrderItemDTO> items = order.getOrderItemList().stream()
+                .map(item -> OrderItemDTO.builder()
+                        .productName(item.getProduct().getName())
+                        .quantity(item.getQuantity())
+                        .purchasePrice(item.getPurchasePrice())
+                        .build())
+                .collect(Collectors.toList());
+
+        return OrderDetailDTO.builder()
+                .id(order.getId())
+                .orderDate(order.getOrderDate())
+                .status(order.getStatus())
+                .orderPrice(order.getOrderPrice())
+                .shippingAddress(order.getShippingAddress())
+                .orderItems(items)
                 .build();
     }
 }

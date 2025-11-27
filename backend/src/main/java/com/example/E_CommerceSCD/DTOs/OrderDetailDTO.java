@@ -2,18 +2,18 @@ package com.example.E_CommerceSCD.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderSummaryDTO {
-    private Long id;
-    private LocalDate orderDate;
-    private String status;
-    private Double orderPrice;
+@EqualsAndHashCode(callSuper = true)
+public class OrderDetailDTO extends OrderSummaryDTO {
+    private String shippingAddress;
+    private List<OrderItemDTO> orderItems;
 }

@@ -24,7 +24,6 @@ public class AdminController {
     private final OrderService orderService;
     private final UserService userService;
 
-    // ... (Product and Category CRUD methods unchanged) ...
     @PostMapping("/products")
     public ResponseEntity<ProductDetailDTO> createProduct(@RequestBody ProductCreateUpdateDTO createDto) {
         return ResponseEntity.ok(productService.createProduct(createDto));
@@ -51,8 +50,6 @@ public class AdminController {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
-
-    // ...
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDetailDTO>> getAllProductsForAdmin() {
@@ -87,5 +84,10 @@ public class AdminController {
     public ResponseEntity<Void> banUser(@PathVariable Long id, @RequestParam(required = false) String reason) {
         userService.banUser(id, reason != null ? reason : "Banned by Admin");
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderDetailDTO> getOrderDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderDetails(id));
     }
 }
