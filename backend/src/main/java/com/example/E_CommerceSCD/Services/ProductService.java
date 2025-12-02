@@ -25,6 +25,9 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    // Hardcoded base URL for development. In production, consider moving this to application.properties
+    private final String BASE_IMAGE_URL = "http://localhost:8083/images/";
+
     // --- SEARCH & PAGINATION ---
     public Page<ProductSummaryDTO> searchProducts(String search, String sort, Long categoryId, Pageable pageable) {
         Specification<Product> spec = (root, query, criteriaBuilder) -> {
@@ -129,6 +132,7 @@ public class ProductService {
 
     // --- MAPPERS ---
     private ProductSummaryDTO mapToSummaryDTO(Product p) {
+        // Note: If you add an image field to ProductSummaryDTO later, apply the same URL logic here
         return ProductSummaryDTO.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -137,8 +141,17 @@ public class ProductService {
     }
 
     private ProductDetailDTO mapToDetailDTO(Product p) {
+        // Logic to prepend BASE_IMAGE_URL if the stored string is just a filename
         List<String> imageUrls = (p.getImages() != null)
-                ? p.getImages().stream().map(ProductImage::getImageUrl).collect(Collectors.toList())
+                ? p.getImages().stream()
+                .map(img -> {
+                    String url = img.getImageUrl();
+                    if (url != null && !url.startsWith("http")) {
+                        return BASE_IMAGE_URL + url;
+                    }
+                    return url;
+                })
+                .collect(Collectors.toList())
                 : new ArrayList<>();
 
         return ProductDetailDTO.builder()

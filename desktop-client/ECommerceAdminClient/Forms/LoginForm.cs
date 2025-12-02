@@ -79,7 +79,7 @@ namespace ECommerceAdminClient.Forms
                 var result = registerForm.ShowDialog();
 
                 this.Show();
-                this.WindowState = FormWindowState.Normal;
+                this.BringToFront(); 
 
                 if (result == DialogResult.OK)
                 {
@@ -87,6 +87,7 @@ namespace ECommerceAdminClient.Forms
                     {
                         txtUsername.Text = registerForm.RegisteredUsername;
                         txtPassword.Focus();
+                        MessageBox.Show("Registration successful! Please log in.");
                     }
                 }
             }

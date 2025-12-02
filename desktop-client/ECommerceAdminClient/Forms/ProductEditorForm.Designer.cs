@@ -125,7 +125,7 @@
             this.txtImages.TabIndex = 5;
             this.txtImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtImages.UseSystemPasswordChar = false;
-             
+            this.txtImages.Hint = "Image Filenames (e.g. photo.jpg)";
             // btnSave
             this.btnSave.AutoSize = false;
             this.btnSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
