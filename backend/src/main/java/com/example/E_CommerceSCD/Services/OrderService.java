@@ -41,7 +41,7 @@ public class OrderService {
                 .user(user)
                 .orderDate(LocalDate.now())
                 .status("PENDING")
-                .shippingAddress(request.getShippingAdress())
+                .shippingAddress(request.getShippingAddress())
                 .orderPrice(total)
                 .orderItemList(new ArrayList<>())
                 .build();

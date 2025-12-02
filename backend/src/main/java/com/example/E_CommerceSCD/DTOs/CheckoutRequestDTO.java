@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CheckoutRequestDTO {
-    private String shippingAdress;
+    private String shippingAddress;
 }

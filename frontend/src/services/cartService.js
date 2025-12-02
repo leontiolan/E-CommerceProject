@@ -16,6 +16,6 @@ export const removeFromCart = async (itemId) => {
 };
 
 export const checkout = async (shippingAddress) => {
-    const response = await api.post('/orders/checkout', { shippingAdress: shippingAddress }); // Note: typo 'shippingAdress' matches your backend DTO
+    const response = await api.post('/orders/checkout', { shippingAddress }); 
     return response.data;
 };

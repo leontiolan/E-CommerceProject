@@ -132,11 +132,22 @@ public class ProductService {
 
     // --- MAPPERS ---
     private ProductSummaryDTO mapToSummaryDTO(Product p) {
-        // Note: If you add an image field to ProductSummaryDTO later, apply the same URL logic here
+        // Logic to get the first image for the summary card
+        String imageUrl = null;
+        if (p.getImages() != null && !p.getImages().isEmpty()) {
+            String rawUrl = p.getImages().get(0).getImageUrl();
+            if (rawUrl != null && !rawUrl.startsWith("http")) {
+                imageUrl = BASE_IMAGE_URL + rawUrl;
+            } else {
+                imageUrl = rawUrl;
+            }
+        }
+
         return ProductSummaryDTO.builder()
                 .id(p.getId())
                 .name(p.getName())
                 .price(p.getPrice())
+                .imageUrl(imageUrl)
                 .build();
     }
 

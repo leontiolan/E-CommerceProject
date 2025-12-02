@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 import { addToCart } from '../services/cartService';
-import { getReviews, createReview } from '../services/reviewService.js';
+import { getReviews, createReview } from '../services/reviewService';
 import { AuthContext } from '../context/AuthContext';
 
 const ProductDetailsPage = () => {
@@ -14,6 +14,9 @@ const ProductDetailsPage = () => {
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
     
+    // --- NEW: Image Carousel State ---
+    const [currentImageIndex, setCurrentImageIndex] = useState(0); 
+
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
 
@@ -27,6 +30,21 @@ const ProductDetailsPage = () => {
             })
             .catch(err => console.error(err));
     }, [id]);
+
+    // --- NEW: Navigation Functions ---
+    const nextImage = () => {
+        if (product.imageURLs && product.imageURLs.length > 0) {
+            setCurrentImageIndex((prev) => (prev + 1) % product.imageURLs.length);
+        }
+    };
+
+    const prevImage = () => {
+        if (product.imageURLs && product.imageURLs.length > 0) {
+            setCurrentImageIndex((prev) => 
+                prev === 0 ? product.imageURLs.length - 1 : prev - 1
+            );
+        }
+    };
 
     const handleAddToCart = async () => {
         if (!user) return navigate('/login');
@@ -53,12 +71,37 @@ const ProductDetailsPage = () => {
     if (loading) return <p style={{textAlign:'center', marginTop:'2rem'}}>Loading details...</p>;
     if (!product) return <p>Product not found.</p>;
 
+    const hasMultipleImages = product.imageURLs && product.imageURLs.length > 1;
+
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
-                <div>
+                
+                {/* --- UPDATED: Image Section with Buttons --- */}
+                <div style={{ position: 'relative' }}>
                     {product.imageURLs && product.imageURLs.length > 0 ? (
-                        <img src={product.imageURLs[0]} alt={product.name} style={{ width: '100%', borderRadius: 'var(--radius)' }} />
+                        <>
+                            <img 
+                                src={product.imageURLs[currentImageIndex]} 
+                                alt={product.name} 
+                                style={{ width: '100%', borderRadius: 'var(--radius)', objectFit: 'contain', maxHeight: '400px' }} 
+                            />
+                            {hasMultipleImages && (
+                                <>
+                                    <button 
+                                        onClick={prevImage}
+                                        style={{position:'absolute', top:'50%', left:'10px', transform:'translateY(-50%)', background:'rgba(0,0,0,0.5)', color:'white', border:'none', borderRadius:'50%', width:'30px', height:'30px', cursor:'pointer'}}
+                                    >&lt;</button>
+                                    <button 
+                                        onClick={nextImage}
+                                        style={{position:'absolute', top:'50%', right:'10px', transform:'translateY(-50%)', background:'rgba(0,0,0,0.5)', color:'white', border:'none', borderRadius:'50%', width:'30px', height:'30px', cursor:'pointer'}}
+                                    >&gt;</button>
+                                    <div style={{textAlign:'center', marginTop:'10px', color:'#666'}}>
+                                        {currentImageIndex + 1} / {product.imageURLs.length}
+                                    </div>
+                                </>
+                            )}
+                        </>
                     ) : (
                         <div style={{ width: '100%', height: '350px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius)' }}>No Image</div>
                     )}
@@ -84,7 +127,7 @@ const ProductDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Reviews Section */}
+            {/* Reviews Section (Same as before) */}
             <div style={{ marginTop: '2rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
                 <h2>Reviews ({reviews.length})</h2>
                 

@@ -8,12 +8,25 @@ const ProfilePage = () => {
     const [profile, setProfile] = useState(null);
     const [orders, setOrders] = useState([]);
     const [passData, setPassData] = useState({ current: '', new: '' });
+    
+    // --- Added loading and error states ---
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const loadData = async () => {
-        const p = await getMyProfile();
-        setProfile(p);
-        const o = await getMyOrders();
-        setOrders(o);
+        try {
+            setLoading(true);
+            const p = await getMyProfile();
+            setProfile(p);
+            const o = await getMyOrders();
+            setOrders(o);
+            setError(null);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to load profile data. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => { loadData(); }, []);
@@ -36,7 +49,17 @@ const ProfilePage = () => {
         }
     };
 
-    if (!profile) return <p>Loading...</p>;
+    // --- Updated conditional rendering ---
+    if (loading) return <p style={{ padding: '2rem', textAlign: 'center' }}>Loading profile...</p>;
+    
+    if (error) return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: 'red' }}>
+            <p>{error}</p>
+            <button onClick={loadData} className="btn" style={{marginTop: '1rem'}}>Retry</button>
+        </div>
+    );
+
+    if (!profile) return <p style={{ padding: '2rem', textAlign: 'center' }}>Profile not found.</p>;
 
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto', display: 'grid', gap: '2rem' }}>
