@@ -166,4 +166,21 @@ public class OrderService {
                 .orderItems(items)
                 .build();
     }
+
+    public OrderSummaryDTO markOrderAsDelivered(Long orderId) {
+        User user = userService.getCurrentUser();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access Denied");
+        }
+
+        if (!"SHIPPED".equals(order.getStatus())) {
+            throw new RuntimeException("You can only confirm delivery for shipped orders.");
+        }
+
+        order.setStatus("DELIVERED");
+        return mapToDTO(orderRepository.save(order));
+    }
 }

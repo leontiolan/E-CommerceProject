@@ -26,7 +26,9 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Your public endpoints
+                        // Allow public access to images
+                        .requestMatchers("/images/**").permitAll()
+                        // Existing public endpoints
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/products",
@@ -34,14 +36,13 @@ public class SecurityConfiguration {
                                 "/api/categories",
                                 "/api/products/{id}/reviews"
                         ).permitAll()
-                        // All other endpoints
+                        // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider) // Use the injected provider
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

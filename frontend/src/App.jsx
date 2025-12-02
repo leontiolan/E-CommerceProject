@@ -1,41 +1,45 @@
-import { useState, useEffect } from 'react';
-import { getProducts } from './services/productService';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './context/AuthContext';
+import { useContext } from 'react';
+import Navbar from './components/Navbar';
+import ChatBot from './components/ChatBot';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
+import CartPage from './pages/CartPage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+    const { user, loading } = useContext(AuthContext);
+    if (loading) return null;
+    if (!user) return <div style={{textAlign:'center', marginTop:'50px'}}>Please <a href="/login">Login</a> to view this page.</div>;
+    return children;
+};
+
 function App() {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // Fetch products when component mounts
-    getProducts()
-      .then(data => {
-        console.log("Data received from backend:", data);
-        setProducts(data);
-      })
-      .catch(err => {
-        setError("Failed to connect to server. Is Backend running on port 8083?");
-      });
-  }, []);
-
   return (
-    <div className="App">
-      <h1>E-Commerce Store</h1>
-
-      {error && <p style={{color: 'red'}}>{error}</p>}
-
-      <div className="product-grid">
-        {products.length === 0 && !error ? <p>Loading products...</p> : null}
-
-        {products.map(product => (
-          <div key={product.id} style={{border: '1px solid #ccc', margin: '10px', padding: '10px'}}>
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-            <p><strong>${product.price}</strong></p>
+    <AuthProvider>
+      <Router>
+        <div className="app-container">
+          <Navbar />
+          <div className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/product/:id" element={<ProductDetailsPage />} />
+              <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            </Routes>
           </div>
-        ))}
-      </div>
-    </div>
+          {/* Floating Chatbot visible on all pages when logged in (or public if desired) */}
+          <ChatBot />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
