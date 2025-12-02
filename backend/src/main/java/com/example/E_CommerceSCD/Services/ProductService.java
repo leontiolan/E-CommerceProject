@@ -4,6 +4,7 @@ import com.example.E_CommerceSCD.DTOs.*;
 import com.example.E_CommerceSCD.Entity.Category;
 import com.example.E_CommerceSCD.Entity.Product;
 import com.example.E_CommerceSCD.Entity.ProductImage;
+import com.example.E_CommerceSCD.Entity.Review;
 import com.example.E_CommerceSCD.Repositories.CategoryRepository;
 import com.example.E_CommerceSCD.Repositories.ProductRepository;
 import jakarta.persistence.criteria.Predicate;
@@ -152,7 +153,6 @@ public class ProductService {
     }
 
     private ProductDetailDTO mapToDetailDTO(Product p) {
-        // Logic to prepend BASE_IMAGE_URL if the stored string is just a filename
         List<String> imageUrls = (p.getImages() != null)
                 ? p.getImages().stream()
                 .map(img -> {
@@ -165,14 +165,24 @@ public class ProductService {
                 .collect(Collectors.toList())
                 : new ArrayList<>();
 
+        // --- NEW: Calculate Average Rating ---
+        double avg = 0.0;
+        if (p.getReviewList() != null && !p.getReviewList().isEmpty()) {
+            double sum = p.getReviewList().stream().mapToInt(Review::getRating).sum();
+            avg = sum / p.getReviewList().size();
+        }
+        // Round to 1 decimal place
+        double roundedAvg = Math.round(avg * 10.0) / 10.0;
+
         return ProductDetailDTO.builder()
                 .id(p.getId())
                 .name(p.getName())
                 .description(p.getDescription())
                 .price(p.getPrice())
                 .stockQuantity(p.getStockQuantity())
+                .averageRating(roundedAvg) // --- Set the calculated rating ---
                 .category(new CategoryDTO(p.getCategory().getId(), p.getCategory().getName()))
-                .reviewDTOList(Collections.emptyList()) // Keep reviews empty for list views to save performance
+                .reviewDTOList(Collections.emptyList())
                 .imageURLs(imageUrls)
                 .build();
     }

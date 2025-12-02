@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { getMyProfile, changePassword } from '../services/accountService';
-import { getMyOrders, cancelOrder } from '../services/orderService';
+// Ensure confirmDelivery is imported
+import { getMyOrders, cancelOrder, confirmDelivery } from '../services/orderService'; 
 import { AuthContext } from '../context/AuthContext';
 
 const ProfilePage = () => {
@@ -9,7 +10,6 @@ const ProfilePage = () => {
     const [orders, setOrders] = useState([]);
     const [passData, setPassData] = useState({ current: '', new: '' });
     
-    // --- Added loading and error states ---
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -44,12 +44,24 @@ const ProfilePage = () => {
         if(confirm("Are you sure you want to cancel this order?")) {
             try {
                 await cancelOrder(id);
-                loadData(); // Refresh list
+                loadData(); 
             } catch(e) { alert(e.response?.data?.message || "Error cancelling"); }
         }
     };
 
-    // --- Updated conditional rendering ---
+    // --- NEW: Handle Delivery Confirmation ---
+    const handleConfirmReceived = async (id) => {
+        if(confirm("Confirm that you have received this order?")) {
+            try {
+                await confirmDelivery(id);
+                loadData(); // Reload to update status to DELIVERED
+            } catch(e) { 
+                console.error(e);
+                alert(e.response?.data?.message || "Error updating status"); 
+            }
+        }
+    };
+
     if (loading) return <p style={{ padding: '2rem', textAlign: 'center' }}>Loading profile...</p>;
     
     if (error) return (
@@ -113,9 +125,14 @@ const ProfilePage = () => {
                                         </span>
                                     </td>
                                     <td style={{padding:'10px'}}>
+                                        {/* Status Logic: PENDING -> Cancel, SHIPPED -> Received */}
                                         {o.status === 'PENDING' && (
                                             <button onClick={() => handleCancel(o.id)} className="btn btn-danger" style={{padding:'5px 10px', fontSize:'0.8rem'}}>Cancel</button>
                                         )}
+                                        {o.status === 'SHIPPED' && (
+                                            <button onClick={() => handleConfirmReceived(o.id)} className="btn" style={{padding:'5px 10px', fontSize:'0.8rem', backgroundColor: '#22c55e', border: 'none'}}>Received?</button>
+                                        )}
+                                        {/* If DELIVERED or CANCELLED, show nothing or a static text */}
                                     </td>
                                 </tr>
                             ))}

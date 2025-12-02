@@ -8,3 +8,7 @@ export const getMyOrders = async () => {
 export const cancelOrder = async (orderId) => {
     await api.put(`/orders/${orderId}/cancel`);
 };
+
+export const confirmDelivery = async (orderId) => {
+    await api.put(`/orders/${orderId}/delivered`);
+};

@@ -41,10 +41,63 @@ const HomePage = () => {
 
     return (
         <div>
-            {/* ... Your existing Search/Filter Inputs ... */}
+            {/* Search and Filter Inputs */}
+            <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Search products..." 
+                    value={filters.search} 
+                    onChange={handleFilterChange}
+                    style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', flex: 1 }}
+                />
+                
+                <select 
+                    name="category" 
+                    value={filters.category} 
+                    onChange={handleFilterChange}
+                    style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                >
+                    <option value="">All Categories</option>
+                    {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                </select>
+
+                <select 
+                    name="sort" 
+                    value={filters.sort} 
+                    onChange={handleFilterChange}
+                    style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                >
+                    <option value="name">Sort by Name</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                </select>
+            </div>
             
+            {/* Product Grid */}
             <div className="product-grid">
-               {/* ... Your existing Product mapping ... */}
+               {products.length > 0 ? (
+                   products.map(product => (
+                       <div key={product.id} className="product-card">
+                           <img 
+                               src={product.imageUrl || 'https://via.placeholder.com/200'} 
+                               alt={product.name} 
+                               className="product-image" 
+                           />
+                           <div className="card-body">
+                               <h3>{product.name}</h3>
+                               <p className="price">${product.price.toFixed(2)}</p>
+                               <Link to={`/product/${product.id}`} className="btn">
+                                   View Details
+                               </Link>
+                           </div>
+                       </div>
+                   ))
+               ) : (
+                   <p>No products found.</p>
+               )}
             </div>
 
             {/* Pagination Controls */}

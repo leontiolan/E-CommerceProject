@@ -14,7 +14,7 @@ const ProductDetailsPage = () => {
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
     
-    // --- NEW: Image Carousel State ---
+    // --- Image Carousel State ---
     const [currentImageIndex, setCurrentImageIndex] = useState(0); 
 
     const [quantity, setQuantity] = useState(1);
@@ -31,7 +31,7 @@ const ProductDetailsPage = () => {
             .catch(err => console.error(err));
     }, [id]);
 
-    // --- NEW: Navigation Functions ---
+    // --- Navigation Functions ---
     const nextImage = () => {
         if (product.imageURLs && product.imageURLs.length > 0) {
             setCurrentImageIndex((prev) => (prev + 1) % product.imageURLs.length);
@@ -60,8 +60,15 @@ const ProductDetailsPage = () => {
         e.preventDefault();
         try {
             await createReview(product.id, newReview.rating, newReview.comment);
-            const updatedReviews = await getReviews(product.id);
+            
+            // Refresh reviews AND product details (to update average rating)
+            const [updatedReviews, updatedProduct] = await Promise.all([
+                getReviews(product.id),
+                getProductById(product.id)
+            ]);
+            
             setReviews(updatedReviews);
+            setProduct(updatedProduct);
             setNewReview({ rating: 5, comment: '' });
         } catch (error) {
             alert(error.response?.data?.message || "Failed to post review. Have you bought this item?");
@@ -77,7 +84,7 @@ const ProductDetailsPage = () => {
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
                 
-                {/* --- UPDATED: Image Section with Buttons --- */}
+                {/* --- Image Section with Buttons --- */}
                 <div style={{ position: 'relative' }}>
                     {product.imageURLs && product.imageURLs.length > 0 ? (
                         <>
@@ -109,7 +116,15 @@ const ProductDetailsPage = () => {
                 
                 <div>
                     <h1 style={{marginTop: 0}}>{product.name}</h1>
-                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>${product.price.toFixed(2)}</p>
+                    <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '0.5rem' }}>${product.price.toFixed(2)}</p>
+                    
+                    {/* --- Display Average Rating --- */}
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                        <span style={{ color: '#eab308', fontSize: '1.2rem', marginRight: '5px' }}>★</span>
+                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{product.averageRating || '0.0'}</span>
+                        <span style={{ color: '#64748b', fontSize: '0.9rem', marginLeft: '5px' }}>/ 10</span>
+                    </div>
+
                     <p style={{color: '#64748b'}}>Category: {product.category?.name}</p>
                     <p style={{lineHeight: '1.6'}}>{product.description}</p>
                     
@@ -127,7 +142,7 @@ const ProductDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Reviews Section (Same as before) */}
+            {/* Reviews Section */}
             <div style={{ marginTop: '2rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
                 <h2>Reviews ({reviews.length})</h2>
                 
