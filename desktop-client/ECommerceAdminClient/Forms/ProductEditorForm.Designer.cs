@@ -22,8 +22,9 @@
             this.btnSave = new MaterialSkin.Controls.MaterialButton();
             this.btnCancel = new MaterialSkin.Controls.MaterialButton();
             this.txtImages = new MaterialSkin.Controls.MaterialMultiLineTextBox2();
+            this.btnUploadImage = new MaterialSkin.Controls.MaterialButton(); // Added
             this.SuspendLayout();
-             
+
             // txtName
             this.txtName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtName.Depth = 0;
@@ -37,7 +38,7 @@
             this.txtName.Size = new System.Drawing.Size(360, 50);
             this.txtName.TabIndex = 0;
             this.txtName.Text = "";
-             
+
             // txtPrice
             this.txtPrice.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPrice.Depth = 0;
@@ -51,7 +52,7 @@
             this.txtPrice.Size = new System.Drawing.Size(170, 50);
             this.txtPrice.TabIndex = 1;
             this.txtPrice.Text = "";
-             
+
             // txtStock 
             this.txtStock.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtStock.Depth = 0;
@@ -65,7 +66,7 @@
             this.txtStock.Size = new System.Drawing.Size(170, 50);
             this.txtStock.TabIndex = 2;
             this.txtStock.Text = "";
-             
+
             // cmbCategory
             this.cmbCategory.AutoResize = false;
             this.cmbCategory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
@@ -87,7 +88,7 @@
             this.cmbCategory.Size = new System.Drawing.Size(360, 49);
             this.cmbCategory.StartIndex = 0;
             this.cmbCategory.TabIndex = 3;
-             
+
             // txtDescription 
             this.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtDescription.Depth = 0;
@@ -101,7 +102,7 @@
             this.txtDescription.Size = new System.Drawing.Size(360, 50);
             this.txtDescription.TabIndex = 4;
             this.txtDescription.Text = "";
-            
+
             // txtImages 
             this.txtImages.AnimateReadOnly = false;
             this.txtImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -121,11 +122,31 @@
             this.txtImages.SelectionLength = 0;
             this.txtImages.SelectionStart = 0;
             this.txtImages.ShortcutsEnabled = true;
-            this.txtImages.Size = new System.Drawing.Size(360, 100);
+            this.txtImages.Size = new System.Drawing.Size(260, 100); // Shrank width to fit button
             this.txtImages.TabIndex = 5;
             this.txtImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtImages.UseSystemPasswordChar = false;
-            this.txtImages.Hint = "Image Filenames (e.g. photo.jpg)";
+
+            // btnUploadImage (New Button)
+            this.btnUploadImage.AutoSize = false;
+            this.btnUploadImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnUploadImage.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnUploadImage.Depth = 0;
+            this.btnUploadImage.HighEmphasis = true;
+            this.btnUploadImage.Icon = null;
+            this.btnUploadImage.Location = new System.Drawing.Point(290, 320); // To the right of text box
+            this.btnUploadImage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnUploadImage.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnUploadImage.Name = "btnUploadImage";
+            this.btnUploadImage.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnUploadImage.Size = new System.Drawing.Size(90, 100);
+            this.btnUploadImage.TabIndex = 8;
+            this.btnUploadImage.Text = "UPLOAD PHOTO";
+            this.btnUploadImage.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnUploadImage.UseAccentColor = false;
+            this.btnUploadImage.UseVisualStyleBackColor = true;
+            this.btnUploadImage.Click += new System.EventHandler(this.btnUploadImage_Click);
+
             // btnSave
             this.btnSave.AutoSize = false;
             this.btnSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -145,7 +166,7 @@
             this.btnSave.UseAccentColor = false;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-             
+
             // btnCancel
             this.btnCancel.AutoSize = false;
             this.btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -165,11 +186,12 @@
             this.btnCancel.UseAccentColor = false;
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-             
+
             // ProductEditorForm
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 500);
+            this.Controls.Add(this.btnUploadImage); // Add to controls
             this.Controls.Add(this.txtImages);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -190,9 +212,10 @@
         private MaterialSkin.Controls.MaterialTextBox txtPrice;
         private MaterialSkin.Controls.MaterialTextBox txtStock;
         private MaterialSkin.Controls.MaterialTextBox txtDescription;
-        private MaterialSkin.Controls.MaterialMultiLineTextBox2 txtImages; 
+        private MaterialSkin.Controls.MaterialMultiLineTextBox2 txtImages;
         private MaterialSkin.Controls.MaterialComboBox cmbCategory;
         private MaterialSkin.Controls.MaterialButton btnSave;
         private MaterialSkin.Controls.MaterialButton btnCancel;
+        private MaterialSkin.Controls.MaterialButton btnUploadImage; // Declaration
     }
 }

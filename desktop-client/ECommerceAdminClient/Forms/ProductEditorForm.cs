@@ -66,6 +66,42 @@ namespace ECommerceAdminClient.Forms
             }
         }
 
+        // --- UPDATED: Upload Button Click Handler ---
+        private async void btnUploadImage_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select Product Image";
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    btnUploadImage.Enabled = false;
+                    btnUploadImage.Text = "Uploading...";
+
+                    string uploadedFilename = await _apiService.UploadImageAsync(openFileDialog.FileName);
+
+                    if (!string.IsNullOrEmpty(uploadedFilename))
+                    {
+                        // FIX: Use += string concatenation instead of AppendText
+                        if (!string.IsNullOrWhiteSpace(txtImages.Text))
+                        {
+                            txtImages.Text += Environment.NewLine + uploadedFilename;
+                        }
+                        else
+                        {
+                            txtImages.Text = uploadedFilename;
+                        }
+                        MessageBox.Show("Image uploaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    btnUploadImage.Enabled = true;
+                    btnUploadImage.Text = "UPLOAD PHOTO";
+                }
+            }
+        }
+        // ----------------------------------------
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPrice.Text))

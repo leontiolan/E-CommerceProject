@@ -27,7 +27,6 @@ public class CatalogController {
     private final CategoryService categoryService;
     private final ReviewService reviewService;
 
-    // --- UPDATED: Pagination ---
     @GetMapping("/products")
     public ResponseEntity<Page<ProductSummaryDTO>> getProducts(
             @RequestParam(required = false) String search,
@@ -38,9 +37,25 @@ public class CatalogController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {
+        // Default sort
         Sort sortOrder = Sort.by("name").ascending();
-        if ("price_asc".equalsIgnoreCase(sort)) sortOrder = Sort.by("price").ascending();
-        else if ("price_desc".equalsIgnoreCase(sort)) sortOrder = Sort.by("price").descending();
+
+        // Handle sort options
+        if (sort != null) {
+            switch (sort.toLowerCase()) {
+                case "price_asc":
+                    sortOrder = Sort.by("price").ascending();
+                    break;
+                case "price_desc":
+                    sortOrder = Sort.by("price").descending();
+                    break;
+                case "name_desc":
+                    sortOrder = Sort.by("name").descending();
+                    break;
+                default:
+                    sortOrder = Sort.by("name").ascending();
+            }
+        }
 
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 

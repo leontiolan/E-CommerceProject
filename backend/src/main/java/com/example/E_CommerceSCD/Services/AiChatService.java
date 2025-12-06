@@ -1,5 +1,7 @@
 package com.example.E_CommerceSCD.Services;
 
+import com.example.E_CommerceSCD.Entity.Product;
+import com.example.E_CommerceSCD.Repositories.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -12,12 +14,16 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AiChatService {
 
     private final ObjectMapper objectMapper;
+    private final ProductRepository productRepository;
 
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -27,9 +33,18 @@ public class AiChatService {
 
     public String getChatResponse(String userPrompt) {
         try {
-            // Simplified System Prompt
+            // 1. Build the context string with Category summaries + Product details
+            String stockContext = buildStockContext();
+
+            // 2. Create the system prompt
             String systemInstruction = "You are a helpful customer support assistant for an E-Commerce shop. " +
-                    "You can answer general questions, but you do not have access to real-time stock information right now.";
+                    "Use the following inventory data to answer user questions.\n" +
+                    "The data includes a summary of categories and a list of specific products.\n\n" +
+                    stockContext + "\n\n" +
+                    "Rules:\n" +
+                    "- If asked about category counts (e.g. 'how many phones'), use the Category Summary.\n" +
+                    "- If asked about specific products, check the Product List for price and stock.\n" +
+                    "- Be concise and polite.";
 
             return callGeminiApi(systemInstruction, userPrompt);
 
@@ -39,13 +54,38 @@ public class AiChatService {
         }
     }
 
+    private String buildStockContext() {
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) return "No products currently available.";
+
+        StringBuilder sb = new StringBuilder();
+
+        // --- Part A: Category Summary ---
+        Map<String, Long> categoryCounts = products.stream()
+                .map(p -> p.getCategory().getName())
+                .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
+
+        sb.append("=== Category Summary ===\n");
+        categoryCounts.forEach((cat, count) ->
+                sb.append(String.format("- %s: %d items\n", cat, count))
+        );
+        sb.append("\n");
+
+        // --- Part B: Product List ---
+        sb.append("=== Product List ===\n");
+        for (Product p : products) {
+            sb.append(String.format("- Product: %s | Category: %s | Price: $%.2f | Stock: %d\n",
+                    p.getName(), p.getCategory().getName(), p.getPrice(), p.getStockQuantity()));
+        }
+        return sb.toString();
+    }
+
     private String callGeminiApi(String systemInstruction, String userMessage) throws Exception {
         ObjectNode rootNode = objectMapper.createObjectNode();
         ArrayNode contentsArray = rootNode.putArray("contents");
         ObjectNode contentNode = contentsArray.addObject();
         ArrayNode partsArray = contentNode.putArray("parts");
 
-        // Combine system instruction and user message
         String combinedText = systemInstruction + "\n\nUser: " + userMessage;
         partsArray.addObject().put("text", combinedText);
 

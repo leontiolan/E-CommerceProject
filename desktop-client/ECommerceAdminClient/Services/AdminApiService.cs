@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO; // Added for FileStream
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -21,13 +22,48 @@ namespace ECommerceAdminClient.Services
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // Re-attach token if it exists (useful when reopening forms)
             if (!string.IsNullOrEmpty(_jwtToken))
             {
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
             }
         }
 
+        // --- NEW: Upload Image Method ---
+        public async Task<string> UploadImageAsync(string filePath)
+        {
+            try
+            {
+                using (var content = new MultipartFormDataContent())
+                {
+                    var fileStream = new FileStream(filePath, FileMode.Open);
+                    var fileContent = new StreamContent(fileStream);
+                    // Default to jpeg, backend handles it regardless
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+
+                    // "file" corresponds to @RequestParam("file") in Spring Boot
+                    content.Add(fileContent, "file", Path.GetFileName(filePath));
+
+                    var response = await _client.PostAsync("admin/images/upload", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Returns the generated filename (e.g., "550e8400-e29b....jpg")
+                        return await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Upload failed: " + await response.Content.ReadAsStringAsync());
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error uploading image: " + ex.Message);
+                return null;
+            }
+        }
+        // --------------------------------
 
         // AUTHENTICATION
         public async Task<bool> LoginAsync(string username, string password)
@@ -85,7 +121,6 @@ namespace ECommerceAdminClient.Services
             }
         }
 
-
         // PRODUCT MANAGEMENT
         public async Task<List<ProductDTO>> GetAllProductsAsync()
         {
@@ -109,7 +144,6 @@ namespace ECommerceAdminClient.Services
             var response = await _client.DeleteAsync($"admin/products/{id}");
             return response.IsSuccessStatusCode;
         }
-
 
         // CATEGORY MANAGEMENT
         public async Task<List<CategoryDTO>> GetCategoriesAsync()
@@ -135,7 +169,7 @@ namespace ECommerceAdminClient.Services
             return response.IsSuccessStatusCode;
         }
 
-        // USER MANAGEMENT (Updated with Ban)
+        // USER MANAGEMENT
         public async Task<List<UserDTO>> GetAllUsersAsync()
         {
             return await _client.GetFromJsonAsync<List<UserDTO>>("admin/users") ?? new List<UserDTO>();
@@ -159,7 +193,7 @@ namespace ECommerceAdminClient.Services
             return response.IsSuccessStatusCode;
         }
 
-        // ORDER MANAGEMENT (Updated with Details)
+        // ORDER MANAGEMENT
         public async Task<List<OrderSummaryDTO>> GetAllOrdersAsync()
         {
             return await _client.GetFromJsonAsync<List<OrderSummaryDTO>>("admin/orders") ?? new List<OrderSummaryDTO>();

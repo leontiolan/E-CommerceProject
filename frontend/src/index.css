@@ -55,6 +55,34 @@ body {
   text-decoration: none;
 }
 
+.navbar-search-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 2rem;
+  max-width: 600px;
+}
+
+.navbar-search-input {
+  width: 100%;
+  background-color: #334155;
+  border: 1px solid #475569;
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.navbar-search-input:focus {
+  background-color: #1e293b;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3);
+}
+
+.navbar-search-input::placeholder { color: #94a3b8; }
+
 .nav-links a { color: #94a3b8; text-decoration: none; margin-left: 2rem; font-weight: 500; transition: 0.3s; }
 .nav-links a:hover { color: white; }
 
@@ -78,9 +106,28 @@ body {
 .btn-secondary { background: white; color: var(--text-main); border: 1px solid #e2e8f0; }
 .btn-secondary:hover { background: #f1f5f9; }
 
-/* --- Inputs & Removes Spinners --- */
+.btn-danger { background: #ef4444; color: white; }
+.btn-danger:hover { background: #dc2626; }
+
+.btn-success { background: #22c55e; color: white; }
+.btn-success:hover { background: #16a34a; }
+
+/* --- Inputs & Forms --- */
+.form-container {
+  max-width: 500px;
+  margin: 3rem auto;
+  background: var(--bg-card); /* White Card */
+  color: var(--text-main);    /* Dark Text */
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; }
+
 input, select, textarea {
-  background-color: #1e293b;
+  background-color: #1e293b; /* Default dark input for page */
   border: 1px solid #334155;
   color: white;
   padding: 0.8rem;
@@ -92,49 +139,49 @@ input, select, textarea {
 }
 input:focus, select:focus { border-color: var(--accent); }
 
-/* Remove Arrows/Spinners from Number Inputs */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
+/* Inputs inside white cards (like Login/Cart) should look different? 
+   Actually, keeping inputs dark on white cards provides good contrast too. 
+   But let's make them light if they are inside .sidebar-content or we can stick to dark inputs everywhere for consistency.
+*/
 
-/* --- Sidebar Overlay --- */
-.sidebar-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 2000;
-  display: flex;
-  justify-content: flex-start;
-  animation: fadeIn 0.2s ease;
-}
-
-.sidebar-content {
-  width: 320px;
-  height: 100%;
-  background: #ffffff; /* White Sidebar */
-  color: var(--text-main);
-  padding: 2rem;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-  animation: slideIn 0.3s ease;
-  overflow-y: auto;
-}
-/* Adjust sidebar inputs to be light since sidebar is white */
+/* Sidebar Inputs (Light Theme Overrides) */
 .sidebar-content input, .sidebar-content select {
     background-color: #f1f5f9;
     border: 1px solid #cbd5e1;
     color: #0f172a;
 }
 
+/* Remove Arrows from Number Inputs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* --- Sidebar Overlay --- */
+.sidebar-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+  z-index: 2000; display: flex; justify-content: flex-start;
+  animation: fadeIn 0.2s ease;
+}
+.sidebar-content {
+  width: 320px; height: 100%; background: #ffffff; color: var(--text-main);
+  padding: 2rem; box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+  animation: slideIn 0.3s ease; overflow-y: auto;
+}
+
+/* --- Floating Filter Button --- */
+.floating-filter-btn {
+  position: fixed; bottom: 30px; left: 30px; z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); padding: 1rem 1.5rem;
+  border-radius: 50px; background-color: var(--primary); color: white;
+  font-weight: 700; font-size: 1rem; animation: slideUp 0.3s ease-out;
+  display: flex; align-items: center; gap: 8px;
+}
+.floating-filter-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+
 /* --- Cards --- */
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2.5rem;
 }
 
@@ -143,9 +190,9 @@ input[type=number] {
   border-radius: var(--radius);
   overflow: hidden;
   transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: none; /* Ensure no weird border on the card itself */
 }
 .product-card:hover { 
   transform: translateY(-8px); 
@@ -153,29 +200,22 @@ input[type=number] {
 }
 
 .product-image {
-  width: 100%;
-  height: 260px;
-  object-fit: contain;
-  background-color: #fff; /* White background for image area */
-  border-bottom: 1px solid #f1f5f9;
-  padding: 1rem; /* Padding so image doesn't touch edges */
+  width: 100%; height: 260px; object-fit: contain;
+  background-color: #fff;
+  border-bottom: none; /* REMOVED THE WEIRD OUTLINE */
+  padding: 1rem;
 }
 
 .card-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+.card-body h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.4; }
+.price { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem; }
 
-.card-body h3 { 
-  margin: 0 0 0.5rem 0; 
-  font-size: 1.25rem; 
-  font-weight: 700; 
-  color: #0f172a; /* BLACK TEXT */
-  line-height: 1.4;
-}
-
-.price { 
-  font-size: 1.4rem; 
-  font-weight: 800; 
-  color: var(--primary); 
-  margin-bottom: 1rem; 
+/* --- Cart Items --- */
+.cart-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem; border-bottom: 1px solid #e2e8f0;
+  background: white; color: var(--text-main);
+  border-radius: 8px; margin-bottom: 1rem;
 }
 
 /* --- Chatbot --- */
@@ -195,3 +235,4 @@ input[type=number] {
 /* --- Animations --- */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
