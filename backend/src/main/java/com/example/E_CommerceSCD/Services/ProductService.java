@@ -30,7 +30,7 @@ public class ProductService {
     private final String BASE_IMAGE_URL = "http://localhost:8083/images/";
 
     // --- SEARCH & PAGINATION ---
-    public Page<ProductSummaryDTO> searchProducts(String search, String sort, Long categoryId, Pageable pageable) {
+    public Page<ProductSummaryDTO> searchProducts(String search, String sort, Long categoryId, Double minPrice, Double maxPrice, Pageable pageable) {
         Specification<Product> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -44,6 +44,15 @@ public class ProductService {
             if (categoryId != null) {
                 predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
             }
+
+            // --- NEW: Price Filter Logic ---
+            if (minPrice != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            }
+            if (maxPrice != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+            // -------------------------------
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

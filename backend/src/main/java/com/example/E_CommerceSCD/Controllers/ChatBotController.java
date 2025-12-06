@@ -5,14 +5,12 @@ import com.example.E_CommerceSCD.DTOs.ChatResponseDTO;
 import com.example.E_CommerceSCD.Services.AiChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('USER')")
 public class ChatBotController {
 
     private final AiChatService aiChatService;

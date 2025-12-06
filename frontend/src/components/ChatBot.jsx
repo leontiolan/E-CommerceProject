@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import api from '../services/api';
+// Change the import to use the new service
+import { getChatResponse } from '../services/chatService'; 
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +14,11 @@ const ChatBot = () => {
         setInput('');
 
         try {
-            // Matches ChatBotController.java
-            const response = await api.post('/chat', { prompt: input });
-            setMessages(prev => [...prev, { sender: 'bot', text: response.data.response }]);
+            // Use the service function
+            const data = await getChatResponse(input);
+            setMessages(prev => [...prev, { sender: 'bot', text: data.response }]); // Backend returns { response: "..." }
         } catch (error) {
+            console.error("Chat Error:", error);
             setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I am having trouble connecting.' }]);
         }
     };

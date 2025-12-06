@@ -1,7 +1,5 @@
 package com.example.E_CommerceSCD.Services;
 
-import com.example.E_CommerceSCD.Entity.Product;
-import com.example.E_CommerceSCD.Repositories.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -14,14 +12,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AiChatService {
 
-    private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
 
     @Value("${gemini.api.key}")
@@ -32,57 +27,26 @@ public class AiChatService {
 
     public String getChatResponse(String userPrompt) {
         try {
-            String dbContext = findRelevantProductInfo(userPrompt);
+            // Simplified System Prompt
+            String systemInstruction = "You are a helpful customer support assistant for an E-Commerce shop. " +
+                    "You can answer general questions, but you do not have access to real-time stock information right now.";
 
-            String finalSystemPrompt = "You are a helpful customer support assistant for an E-Commerce shop. " +
-                    "If the user asks about products, use the provided context to answer. " +
-                    "If the context is empty or doesn't match, politely say you don't have that info but offer general help. " +
-                    "You can also answer general off-topic questions (like 'what is 2+2') briefly." +
-                    "\n\nCONTEXT FROM DATABASE:\n" + dbContext;
-
-            return callGeminiApi(finalSystemPrompt, userPrompt);
+            return callGeminiApi(systemInstruction, userPrompt);
 
         } catch (Exception e) {
             e.printStackTrace();
-            // --- DEBUG CHANGE: Return the actual error to the frontend ---
-            return "DEBUG ERROR: " + e.getClass().getSimpleName() + " - " + e.getMessage();
+            return "Error processing your request: " + e.getMessage();
         }
     }
 
-    // ... keep findRelevantProductInfo ...
-    private String findRelevantProductInfo(String prompt) {
-        String lowerPrompt = prompt.toLowerCase();
-        String[] words = lowerPrompt.split("\\s+");
-        List<Product> matches = null;
-
-        for (String word : words) {
-            if (word.length() > 3) {
-                matches = productRepository.findAll((root, query, cb) ->
-                        cb.like(cb.lower(root.get("name")), "%" + word + "%")
-                );
-                if (!matches.isEmpty()) break;
-            }
-        }
-
-        if (matches == null || matches.isEmpty()) {
-            return "No specific products found matching the user's keywords.";
-        }
-
-        return matches.stream()
-                .limit(5)
-                .map(p -> String.format("- %s: $%.2f (Stock: %d) - %s",
-                        p.getName(), p.getPrice(), p.getStockQuantity(), p.getDescription()))
-                .collect(Collectors.joining("\n"));
-    }
-
-    // ... keep callGeminiApi ...
     private String callGeminiApi(String systemInstruction, String userMessage) throws Exception {
         ObjectNode rootNode = objectMapper.createObjectNode();
         ArrayNode contentsArray = rootNode.putArray("contents");
         ObjectNode contentNode = contentsArray.addObject();
         ArrayNode partsArray = contentNode.putArray("parts");
 
-        String combinedText = systemInstruction + "\n\nUSER QUESTION: " + userMessage;
+        // Combine system instruction and user message
+        String combinedText = systemInstruction + "\n\nUser: " + userMessage;
         partsArray.addObject().put("text", combinedText);
 
         String jsonBody = objectMapper.writeValueAsString(rootNode);
@@ -97,7 +61,7 @@ public class AiChatService {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            return "Error from AI Provider: " + response.statusCode() + " " + response.body();
+            return "AI Provider Error (" + response.statusCode() + "): " + response.body();
         }
 
         JsonNode responseNode = objectMapper.readTree(response.body());

@@ -9,8 +9,8 @@ import RegisterPage from './pages/RegisterPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
-import './App.css';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import './App.css';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -32,12 +32,19 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/product/:id" element={<ProductDetailsPage />} />
-              <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
-              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-              <Route path="/order-success" element={<ProtectedRoute><OrderSuccessPage /></ProtectedRoute>} />
+              
+              {/* Protected Routes */}
+              <Route path="/cart" element={
+                  <ProtectedRoute><CartPage /></ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                  <ProtectedRoute><ProfilePage /></ProtectedRoute>
+              } />
+              <Route path="/order-success" element={
+                  <ProtectedRoute><OrderSuccessPage /></ProtectedRoute>
+              } />
             </Routes>
           </div>
-          {/* Floating Chatbot visible on all pages when logged in (or public if desired) */}
           <ChatBot />
         </div>
       </Router>

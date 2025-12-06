@@ -33,8 +33,10 @@ public class CatalogController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) Long category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "12") int size
     ) {
         Sort sortOrder = Sort.by("name").ascending();
         if ("price_asc".equalsIgnoreCase(sort)) sortOrder = Sort.by("price").ascending();
@@ -42,7 +44,7 @@ public class CatalogController {
 
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        return ResponseEntity.ok(productService.searchProducts(search, sort, category, pageable));
+        return ResponseEntity.ok(productService.searchProducts(search, sort, category, minPrice, maxPrice, pageable));
     }
 
     @GetMapping("/products/{id}")
