@@ -1,6 +1,7 @@
 package com.example.E_CommerceSCD.Controllers;
 
 import com.example.E_CommerceSCD.DTOs.CheckoutRequestDTO;
+import com.example.E_CommerceSCD.DTOs.OrderDetailDTO;
 import com.example.E_CommerceSCD.DTOs.OrderSummaryDTO;
 import com.example.E_CommerceSCD.Services.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,13 @@ public class OrderController {
     public ResponseEntity<List<OrderSummaryDTO>> getMyOrderHistory() {
         return ResponseEntity.ok(orderService.getOrderHistoryForCurrentUser());
     }
-    
+
+    // --- NEW: Get Specific Order Details for User ---
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDetailDTO> getOrderDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderDetailsForCurrentUser(id));
+    }
+
     @PutMapping("/{id}/cancel")
     public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
         orderService.cancelMyOrder(id);

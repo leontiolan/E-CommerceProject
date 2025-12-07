@@ -5,6 +5,12 @@ export const getMyOrders = async () => {
     return response.data;
 };
 
+// --- NEW: Fetch specific order details ---
+export const getOrderDetails = async (id) => {
+    const response = await api.get(`/orders/${id}`);
+    return response.data;
+};
+
 export const cancelOrder = async (orderId) => {
     await api.put(`/orders/${orderId}/cancel`);
 };
