@@ -21,7 +21,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
-    private final OrderRepository orderRepository; // Injected
+    private final OrderRepository orderRepository;
 
     public List<ReviewDTO> getReviewsForProduct(Long productId) {
         return reviewRepository.findByProductId(productId).stream()
@@ -39,14 +39,12 @@ public class ReviewService {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // --- NEW: Check Eligibility ---
         boolean hasDeliveredOrder = orderRepository.existsByUserIdAndOrderItemList_ProductIdAndStatus(
                 user.getId(), dto.getProductId(), "DELIVERED");
 
         if (!hasDeliveredOrder) {
             throw new RuntimeException("You can only review products from orders that have been DELIVERED.");
         }
-        // ------------------------------
 
         Review review = new Review();
         review.setRating(dto.getRating());

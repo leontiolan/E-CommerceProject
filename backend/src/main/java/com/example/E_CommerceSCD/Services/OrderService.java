@@ -122,7 +122,6 @@ public class OrderService {
         return mapToDTO(orderRepository.save(order));
     }
 
-    // --- NEW: Secure User Method ---
     public OrderDetailDTO getOrderDetailsForCurrentUser(Long id) {
         User user = userService.getCurrentUser();
         Order order = orderRepository.findById(id)
@@ -134,7 +133,6 @@ public class OrderService {
         return mapToDetailDTO(order);
     }
 
-    // --- ADMIN Method (Unchanged but refactored to use helper) ---
     public OrderDetailDTO getOrderDetails(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -158,7 +156,6 @@ public class OrderService {
         return mapToDTO(orderRepository.save(order));
     }
 
-    // --- Helpers ---
     private OrderSummaryDTO mapToDTO(Order order) {
         return OrderSummaryDTO.builder()
                 .id(order.getId())

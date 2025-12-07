@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// Change the import to use the new service
 import { getChatResponse } from '../services/chatService'; 
 
 const ChatBot = () => {
@@ -14,9 +13,8 @@ const ChatBot = () => {
         setInput('');
 
         try {
-            // Use the service function
             const data = await getChatResponse(input);
-            setMessages(prev => [...prev, { sender: 'bot', text: data.response }]); // Backend returns { response: "..." }
+            setMessages(prev => [...prev, { sender: 'bot', text: data.response }]); 
         } catch (error) {
             console.error("Chat Error:", error);
             setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I am having trouble connecting.' }]);

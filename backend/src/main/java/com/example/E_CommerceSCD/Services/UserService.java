@@ -24,7 +24,6 @@ public class UserService {
     private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ... (Existing getCurrentUser, getCurrentUserProfile, changeUserPassword methods) ...
     public User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
@@ -74,7 +73,6 @@ public class UserService {
                 .build();
     }
 
-    // --- NEW: Ban User ---
     public void banUser(Long id, String reason) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));

@@ -32,7 +32,6 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderHistoryForCurrentUser());
     }
 
-    // --- NEW: Get Specific Order Details for User ---
     @GetMapping("/{id}")
     public ResponseEntity<OrderDetailDTO> getOrderDetails(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderDetailsForCurrentUser(id));

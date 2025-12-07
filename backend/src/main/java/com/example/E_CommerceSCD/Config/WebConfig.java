@@ -12,7 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Dynamically get the absolute path to the backend folder
         Path uploadDir = Paths.get("./product-images");
         String uploadPath = uploadDir.toFile().getAbsolutePath();
 

@@ -56,7 +56,6 @@ public class Product {
     )
     private List<OrderItem> orderItemList;
 
-    // --- NEW: Multiple Images ---
     @OneToMany(
             mappedBy = "product",
             cascade = CascadeType.ALL,

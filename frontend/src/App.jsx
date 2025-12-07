@@ -12,7 +12,6 @@ import ProfilePage from './pages/ProfilePage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import './App.css';
 
-// Protected Route Component
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useContext(AuthContext);
     if (loading) return null;
@@ -33,7 +32,6 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/product/:id" element={<ProductDetailsPage />} />
               
-              {/* Protected Routes */}
               <Route path="/cart" element={
                   <ProtectedRoute><CartPage /></ProtectedRoute>
               } />

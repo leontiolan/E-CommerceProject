@@ -9,11 +9,9 @@ const HomePage = () => {
     const [showFilters, setShowFilters] = useState(false);
     const [showFloatingFilter, setShowFloatingFilter] = useState(false);
 
-    // --- URL Search Params ---
     const [searchParams, setSearchParams] = useSearchParams();
     const urlSearchQuery = searchParams.get('search') || '';
 
-    // API State
     const [activeFilters, setActiveFilters] = useState({
         page: 0,
         size: 12,
@@ -24,15 +22,12 @@ const HomePage = () => {
         maxPrice: ''
     });
 
-    // Form UI State
     const [formState, setFormState] = useState({ ...activeFilters });
 
-    // 1. Fetch Categories
     useEffect(() => {
         getCategories().then(setCategories);
     }, []);
 
-    // 2. Handle Scroll
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 150) setShowFloatingFilter(true);
@@ -42,14 +37,12 @@ const HomePage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // 3. Sync URL Search
     useEffect(() => {
         if (activeFilters.search !== urlSearchQuery) {
             setActiveFilters(prev => ({ ...prev, search: urlSearchQuery, page: 0 }));
         }
     }, [urlSearchQuery]);
 
-    // 4. Fetch Products
     useEffect(() => {
         const params = { ...activeFilters };
         if (!params.category) delete params.category;
@@ -81,7 +74,6 @@ const HomePage = () => {
 
     return (
         <div>
-            {/* --- Top Bar --- */}
             <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '2rem' }}>
                 <button 
                     className="btn btn-secondary" 
@@ -102,7 +94,6 @@ const HomePage = () => {
                 </button>
             )}
 
-            {/* --- FILTER SIDEBAR --- */}
             {showFilters && (
                 <div className="sidebar-overlay" onClick={() => setShowFilters(false)}>
                     <div className="sidebar-content" onClick={e => e.stopPropagation()}>
@@ -169,7 +160,6 @@ const HomePage = () => {
                         </Link>
                     ))
                 ) : (
-                    /* --- Empty State --- */
                     <div style={{textAlign:'center', width:'100%', padding:'4rem', color:'#94a3b8', gridColumn: '1 / -1'}}>
                         <h2 style={{color: 'var(--text-inverse)', marginBottom: '1rem'}}>No products found</h2>
                         <p>Try adjusting your search or filters.</p>

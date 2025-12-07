@@ -40,8 +40,6 @@ public class CartService {
 
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        // Check if product is already in cart
         CartItem existingItem = cart.getCartItemList().stream()
                 .filter(item -> item.getProduct().getId().equals(product.getId()))
                 .findFirst().orElse(null);

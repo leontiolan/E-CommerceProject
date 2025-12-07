@@ -24,10 +24,8 @@ const CartPage = () => {
         if (!address.trim()) return alert("Please enter a shipping address");
         
         try {
-            // 1. Send checkout request to backend
             const orderData = await checkout(address);
             
-            // 2. Navigate to the Success Page with the new order data
             navigate('/order-success', { state: { order: orderData } });
             
         } catch (error) {

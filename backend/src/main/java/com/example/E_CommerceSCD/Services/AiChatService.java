@@ -15,7 +15,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,49 +32,43 @@ public class AiChatService {
 
     public String getChatResponse(String userPrompt) {
         try {
-            // 1. Build the context string with Category summaries + Product details
-            String stockContext = buildStockContext();
+            String stockContext = buildSmartStockContext(userPrompt);
 
-            // 2. Create the system prompt
-            String systemInstruction = "You are a helpful customer support assistant for an E-Commerce shop. " +
-                    "Use the following inventory data to answer user questions.\n" +
-                    "The data includes a summary of categories and a list of specific products.\n\n" +
-                    stockContext + "\n\n" +
-                    "Rules:\n" +
-                    "- If asked about category counts (e.g. 'how many phones'), use the Category Summary.\n" +
-                    "- If asked about specific products, check the Product List for price and stock.\n" +
-                    "- Be concise and polite.";
+            String systemInstruction = "You are a customer support assistant for an E-Commerce shop. " +
+                    "Answer based ONLY on the product data provided below. " +
+                    "If the product is not in the list, apologize and say you don't have that information.\n\n" +
+                    "--- RELEVANT PRODUCT DATA ---\n" +
+                    stockContext;
 
             return callGeminiApi(systemInstruction, userPrompt);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error processing your request: " + e.getMessage();
+            return "I'm having trouble checking the stock right now.";
         }
     }
 
-    private String buildStockContext() {
-        List<Product> products = productRepository.findAll();
-        if (products.isEmpty()) return "No products currently available.";
+    private String buildSmartStockContext(String userQuery) {
+        List<Product> allProducts = productRepository.findAll();
+        if (allProducts.isEmpty()) return "No products found in database.";
+
+        String query = userQuery.toLowerCase();
+
+        List<Product> relevantProducts = allProducts.stream()
+                .filter(p -> (p.getName() != null && query.contains(p.getName().toLowerCase())) ||
+                        (p.getCategory() != null && query.contains(p.getCategory().getName().toLowerCase())) ||
+                        (p.getDescription() != null && query.contains(p.getDescription().toLowerCase())))
+                .limit(10)
+                .collect(Collectors.toList());
+
+        if (relevantProducts.isEmpty()) {
+            relevantProducts = allProducts.stream().limit(5).collect(Collectors.toList());
+        }
 
         StringBuilder sb = new StringBuilder();
-
-        // --- Part A: Category Summary ---
-        Map<String, Long> categoryCounts = products.stream()
-                .map(p -> p.getCategory().getName())
-                .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
-
-        sb.append("=== Category Summary ===\n");
-        categoryCounts.forEach((cat, count) ->
-                sb.append(String.format("- %s: %d items\n", cat, count))
-        );
-        sb.append("\n");
-
-        // --- Part B: Product List ---
-        sb.append("=== Product List ===\n");
-        for (Product p : products) {
-            sb.append(String.format("- Product: %s | Category: %s | Price: $%.2f | Stock: %d\n",
-                    p.getName(), p.getCategory().getName(), p.getPrice(), p.getStockQuantity()));
+        for (Product p : relevantProducts) {
+            sb.append(String.format("- %s | Price: $%.2f | Stock: %d\n",
+                    p.getName(), p.getPrice(), p.getStockQuantity()));
         }
         return sb.toString();
     }
@@ -86,7 +79,7 @@ public class AiChatService {
         ObjectNode contentNode = contentsArray.addObject();
         ArrayNode partsArray = contentNode.putArray("parts");
 
-        String combinedText = systemInstruction + "\n\nUser: " + userMessage;
+        String combinedText = systemInstruction + "\n\nUser Question: " + userMessage;
         partsArray.addObject().put("text", combinedText);
 
         String jsonBody = objectMapper.writeValueAsString(rootNode);
@@ -100,8 +93,13 @@ public class AiChatService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        if (response.statusCode() == 429) {
+            return "I'm a bit overwhelmed right now (Quota Exceeded). Please wait a minute and try again.";
+        }
+
         if (response.statusCode() != 200) {
-            return "AI Provider Error (" + response.statusCode() + "): " + response.body();
+            System.err.println("AI Error: " + response.body());
+            return "I encountered a technical issue. Please try again later.";
         }
 
         JsonNode responseNode = objectMapper.readTree(response.body());

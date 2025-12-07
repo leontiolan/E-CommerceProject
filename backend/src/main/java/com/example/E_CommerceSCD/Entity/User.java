@@ -39,7 +39,6 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    // --- NEW: Ban Fields ---
     @Column(name = "is_banned")
     private boolean isBanned = false;
 
@@ -69,7 +68,6 @@ public class User implements UserDetails {
     @Override
     public boolean isAccountNonExpired() { return true; }
 
-    // --- UPDATED: Lock account if banned ---
     @Override
     public boolean isAccountNonLocked() {
         return !isBanned;

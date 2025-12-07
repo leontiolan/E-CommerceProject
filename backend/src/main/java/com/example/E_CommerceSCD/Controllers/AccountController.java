@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/account")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('USER')") // Only logged-in users can access this
+@PreAuthorize("hasRole('USER')")
 public class AccountController {
 
     private final UserService userService;

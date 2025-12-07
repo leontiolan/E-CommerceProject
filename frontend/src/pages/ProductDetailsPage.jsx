@@ -12,8 +12,10 @@ const ProductDetailsPage = () => {
     
     const [product, setProduct] = useState(null);
     const [reviews, setReviews] = useState([]);
-    const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+    const [newReview, setNewReview] = useState({ rating: 10, comment: '' });
     
+    const [hoverRating, setHoverRating] = useState(0);
+
     const [currentImageIndex, setCurrentImageIndex] = useState(0); 
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -63,10 +65,70 @@ const ProductDetailsPage = () => {
             ]);
             setReviews(updatedReviews);
             setProduct(updatedProduct);
-            setNewReview({ rating: 5, comment: '' });
+            setNewReview({ rating: 10, comment: '' });
+            setHoverRating(0);
         } catch (error) {
             alert(error.response?.data?.message || "Failed to post review. Have you bought this item?");
         }
+    };
+
+    const handleStarMouseMove = (e, index) => {
+        const { left, width } = e.currentTarget.getBoundingClientRect();
+        const mouseX = e.clientX - left;
+        const isHalf = mouseX < width / 2;
+        const ratingValue = (index * 2) + (isHalf ? 1 : 2);
+        setHoverRating(ratingValue);
+    };
+
+    const handleStarClick = () => {
+        setNewReview({ ...newReview, rating: hoverRating });
+    };
+
+    const handleStarMouseLeave = () => {
+        setHoverRating(0);
+    };
+
+    const renderStar = (index) => {
+        const currentRating = hoverRating || newReview.rating;
+        const fullRating = (index + 1) * 2;
+        const halfRating = fullRating - 1;
+
+        let fill = "url(#empty)"; 
+        if (currentRating >= fullRating) {
+            fill = "url(#full)";
+        } else if (currentRating >= halfRating) {
+            fill = "url(#half)";
+        }
+
+        return (
+            <svg 
+                key={index}
+                width="32" 
+                height="32" 
+                viewBox="0 0 24 24" 
+                style={{ cursor: 'pointer', marginRight: '4px' }}
+                onMouseMove={(e) => handleStarMouseMove(e, index)}
+                onClick={handleStarClick}
+                onMouseLeave={handleStarMouseLeave}
+            >
+                <defs>
+                    <linearGradient id="full">
+                        <stop offset="100%" stopColor="#eab308" />
+                    </linearGradient>
+                    <linearGradient id="half">
+                        <stop offset="50%" stopColor="#eab308" />
+                        <stop offset="50%" stopColor="#cbd5e1" />
+                    </linearGradient>
+                    <linearGradient id="empty">
+                        <stop offset="100%" stopColor="#cbd5e1" />
+                    </linearGradient>
+                </defs>
+                <path 
+                    fill={fill} 
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" 
+                />
+            </svg>
+        );
     };
 
     if (loading) return <p style={{textAlign:'center', marginTop:'2rem'}}>Loading details...</p>;
@@ -76,7 +138,7 @@ const ProductDetailsPage = () => {
 
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
+            <div className="panel" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
                 
                 {/* --- Image Section --- */}
                 <div style={{ position: 'relative' }}>
@@ -95,7 +157,7 @@ const ProductDetailsPage = () => {
                             )}
                         </>
                     ) : (
-                        <div style={{ width: '100%', height: '350px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius)' }}>No Image</div>
+                        <div style={{ width: '100%', height: '350px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius)', color: '#64748b' }}>No Image</div>
                     )}
                 </div>
                 
@@ -112,7 +174,6 @@ const ProductDetailsPage = () => {
                             <span style={{ color: '#64748b', fontSize: '0.9rem', marginLeft: '5px' }}>/ 10</span>
                         </div>
                         
-                        {/* --- STOCK DISPLAY --- */}
                         <div style={{ padding: '5px 12px', borderRadius: '20px', background: product.stockQuantity > 0 ? '#dcfce7' : '#fee2e2', color: product.stockQuantity > 0 ? '#166534' : '#991b1b', fontWeight: '600', fontSize: '0.9rem' }}>
                             {product.stockQuantity > 0 ? `Available Stock: ${product.stockQuantity}` : 'Out of Stock'}
                         </div>
@@ -136,10 +197,10 @@ const ProductDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Reviews Section remains the same, included for completeness or truncated... */}
-            <div style={{ marginTop: '2rem', background: 'white', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
+            {/* Reviews Section */}
+            <div className="panel" style={{ marginTop: '2rem', padding: '2rem', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}>
                 <h2 style={{color: '#0f172a'}}>Reviews ({reviews.length})</h2>
-                {/* ... existing review mapping logic ... */}
+                
                 <div style={{ marginBottom: '2rem', maxHeight: '300px', overflowY: 'auto' }}>
                     {reviews.length === 0 && <p style={{color:'#64748b'}}>No reviews yet.</p>}
                     {reviews.map(r => (
@@ -158,9 +219,15 @@ const ProductDetailsPage = () => {
                         <h3 style={{color: '#0f172a'}}>Write a Review</h3>
                         <div style={{ display: 'grid', gap: '1rem' }}>
                             <div>
-                                <label style={{marginRight: '1rem', color: '#334155'}}>Rating (1-10)</label>
-                                <input type="number" min="1" max="10" value={newReview.rating} onChange={e => setNewReview({...newReview, rating: e.target.value})} style={{padding:'0.5rem', width:'60px', background: '#f8fafc', color: '#334155', border: '1px solid #cbd5e1'}} />
+                                <label style={{marginRight: '1rem', color: '#334155', display: 'block', marginBottom: '0.5rem'}}>
+                                    Rating: <span style={{fontWeight:'bold', color:'var(--primary)'}}>{newReview.rating}/10</span>
+                                </label>
+                                
+                                <div style={{ display: 'flex', alignItems: 'center' }} onMouseLeave={() => setHoverRating(0)}>
+                                    {[0, 1, 2, 3, 4].map(index => renderStar(index))}
+                                </div>
                             </div>
+                            
                             <textarea 
                                 rows="3" 
                                 placeholder="Your experience..." 

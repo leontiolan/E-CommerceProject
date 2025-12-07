@@ -69,12 +69,11 @@ public class AuthService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN) // <--- Set Role to ADMIN
+                .role(Role.ADMIN)
                 .build();
 
         User savedUser = userRepository.save(user);
 
-        // Admins might not need a shopping cart, but we create one to avoid null pointer issues if logic is shared
         ShoppingCart cart = ShoppingCart.builder().user(savedUser).build();
         shoppingCartRepository.save(cart);
 

@@ -22,29 +22,24 @@ public class ImageController {
         }
 
         try {
-            // 1. Ensure directory exists relative to the backend execution
             Path uploadDir = Paths.get("product-images");
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
 
-            // 2. Generate unique filename to avoid conflicts
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
                 extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             } else {
-                extension = ".jpg"; // Default if no extension found
+                extension = ".jpg";
             }
 
             String newFilename = UUID.randomUUID().toString() + extension;
 
-            // 3. Save file
             Path filePath = uploadDir.resolve(newFilename);
             Files.copy(file.getInputStream(), filePath);
 
-            // 4. Return just the filename.
-            // The ProductService already knows how to append "http://localhost:8083/images/" to these names.
             return ResponseEntity.ok(newFilename);
 
         } catch (IOException e) {

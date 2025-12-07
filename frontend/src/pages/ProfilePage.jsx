@@ -9,7 +9,6 @@ const ProfilePage = () => {
     const [orders, setOrders] = useState([]);
     const [passData, setPassData] = useState({ current: '', new: '' });
     
-    // --- State for Modal ---
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [loadingDetails, setLoadingDetails] = useState(false);
 
@@ -64,7 +63,6 @@ const ProfilePage = () => {
         }
     };
 
-    // --- View Details Logic ---
     const openOrderDetails = async (id) => {
         setLoadingDetails(true);
         try {
@@ -79,10 +77,10 @@ const ProfilePage = () => {
 
     const getRowStyle = (status) => {
         switch (status) {
-            case 'PENDING': return { background: '#e0f2fe' }; // Light Blue
-            case 'SHIPPED': return { background: '#fefce8' }; // Light Yellow
-            case 'DELIVERED': return { background: '#dcfce7' }; // Light Green
-            case 'CANCELLED': return { background: '#fee2e2' }; // Light Red
+            case 'PENDING': return { background: '#e0f2fe' }; 
+            case 'SHIPPED': return { background: '#fefce8' }; 
+            case 'DELIVERED': return { background: '#dcfce7' };
+            case 'CANCELLED': return { background: '#fee2e2' }; 
             default: return {};
         }
     };
@@ -110,7 +108,6 @@ const ProfilePage = () => {
                 <hr style={{margin: '1.5rem 0', border: '0', borderTop: '1px solid #e2e8f0'}} />
                 
                 <h3>Change Password</h3>
-                {/* --- FIX: Vertical Layout to prevent overlap --- */}
                 <form onSubmit={handlePassChange} style={{display:'flex', flexDirection: 'column', gap:'1rem', maxWidth:'400px'}}>
                     <div>
                         <label style={{display:'block', fontSize:'0.9rem', marginBottom:'5px'}}>Current Password</label>

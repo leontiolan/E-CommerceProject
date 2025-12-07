@@ -79,7 +79,6 @@ public class AdminController {
         return ResponseEntity.ok(userService.getUserDetailsForAdmin(id));
     }
 
-    // --- UPDATED: Ban User ---
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> banUser(@PathVariable Long id, @RequestParam(required = false) String reason) {
         userService.banUser(id, reason != null ? reason : "Banned by Admin");

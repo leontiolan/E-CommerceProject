@@ -26,10 +26,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    // Hardcoded base URL for development. In production, consider moving this to application.properties
     private final String BASE_IMAGE_URL = "http://localhost:8083/images/";
 
-    // --- SEARCH & PAGINATION ---
     public Page<ProductSummaryDTO> searchProducts(String search, String sort, Long categoryId, Double minPrice, Double maxPrice, Pageable pageable) {
         Specification<Product> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -45,14 +43,12 @@ public class ProductService {
                 predicates.add(criteriaBuilder.equal(root.get("category").get("id"), categoryId));
             }
 
-            // --- NEW: Price Filter Logic ---
             if (minPrice != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
             }
             if (maxPrice != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
             }
-            // -------------------------------
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
@@ -61,21 +57,18 @@ public class ProductService {
         return products.map(this::mapToSummaryDTO);
     }
 
-    // --- GET DETAILS ---
     public ProductDetailDTO getProductDetails(Long id) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         return mapToDetailDTO(p);
     }
 
-    // --- ADMIN: GET ALL ---
     public List<ProductDetailDTO> getAllProductsDetailed() {
         return productRepository.findAll().stream()
                 .map(this::mapToDetailDTO)
                 .collect(Collectors.toList());
     }
 
-    // --- ADMIN: CREATE ---
     public ProductDetailDTO createProduct(ProductCreateUpdateDTO dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -87,7 +80,6 @@ public class ProductService {
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(category);
 
-        // Handle Images
         if (dto.getImageUrls() != null && !dto.getImageUrls().isEmpty()) {
             List<ProductImage> images = dto.getImageUrls().stream()
                     .map(url -> ProductImage.builder()
@@ -102,7 +94,6 @@ public class ProductService {
         return mapToDetailDTO(saved);
     }
 
-    // --- ADMIN: UPDATE ---
     public ProductDetailDTO updateProduct(Long id, ProductCreateUpdateDTO dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -116,12 +107,9 @@ public class ProductService {
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(category);
 
-        // Update Images
         if (dto.getImageUrls() != null) {
-            // 1. Clear existing (orphanRemoval=true will delete them from DB)
             product.getImages().clear();
 
-            // 2. Add new images
             List<ProductImage> newImages = dto.getImageUrls().stream()
                     .map(url -> ProductImage.builder()
                             .imageUrl(url)
@@ -135,14 +123,11 @@ public class ProductService {
         return mapToDetailDTO(productRepository.save(product));
     }
 
-    // --- ADMIN: DELETE ---
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
-    // --- MAPPERS ---
     private ProductSummaryDTO mapToSummaryDTO(Product p) {
-        // Logic to get the first image for the summary card
         String imageUrl = null;
         if (p.getImages() != null && !p.getImages().isEmpty()) {
             String rawUrl = p.getImages().get(0).getImageUrl();
@@ -174,13 +159,11 @@ public class ProductService {
                 .collect(Collectors.toList())
                 : new ArrayList<>();
 
-        // --- NEW: Calculate Average Rating ---
         double avg = 0.0;
         if (p.getReviewList() != null && !p.getReviewList().isEmpty()) {
             double sum = p.getReviewList().stream().mapToInt(Review::getRating).sum();
             avg = sum / p.getReviewList().size();
         }
-        // Round to 1 decimal place
         double roundedAvg = Math.round(avg * 10.0) / 10.0;
 
         return ProductDetailDTO.builder()
@@ -189,7 +172,7 @@ public class ProductService {
                 .description(p.getDescription())
                 .price(p.getPrice())
                 .stockQuantity(p.getStockQuantity())
-                .averageRating(roundedAvg) // --- Set the calculated rating ---
+                .averageRating(roundedAvg)
                 .category(new CategoryDTO(p.getCategory().getId(), p.getCategory().getName()))
                 .reviewDTOList(Collections.emptyList())
                 .imageURLs(imageUrls)

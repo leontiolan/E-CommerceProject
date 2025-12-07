@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserOrderByOrderDateDesc(User user);
-
-    // --- NEW: Check if user bought product and order is DELIVERED ---
     @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Order o " +
             "JOIN o.orderItemList oi " +
             "WHERE o.user.id = :userId AND oi.product.id = :productId AND o.status = :status")

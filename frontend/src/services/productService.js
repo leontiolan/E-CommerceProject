@@ -1,7 +1,6 @@
 import api from './api';
 
 export const getProducts = async (params) => {
-    // params: { page, size, sort, category, search }
     const response = await api.get('/products', { params });
     return response.data;
 };

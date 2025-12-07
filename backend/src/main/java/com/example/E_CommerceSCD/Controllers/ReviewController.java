@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('USER')") // Only users can write reviews
+@PreAuthorize("hasRole('USER')")
 public class ReviewController {
 
     private final ReviewService reviewService;

@@ -7,24 +7,20 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     
-    // Initialize search from URL (so it persists on refresh)
     const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
 
-    // Debounce Search Logic (Instant Search)
     useEffect(() => {
         const delaySearch = setTimeout(() => {
             const currentUrlSearch = searchParams.get('search') || '';
             
-            // Only navigate if the search term has actually changed
             if (searchTerm !== currentUrlSearch) {
                 if (searchTerm.trim()) {
                     navigate(`/?search=${encodeURIComponent(searchTerm)}`);
                 } else {
-                    // If search is cleared, go back to root home
                     navigate('/'); 
                 }
             }
-        }, 500); // 500ms delay
+        }, 500);
 
         return () => clearTimeout(delaySearch);
     }, [searchTerm, navigate, searchParams]);
@@ -33,7 +29,6 @@ const Navbar = () => {
         <nav className="navbar">
             <Link to="/" className="brand">E-Shop</Link>
             
-            {/* --- NEW: Global Search Bar --- */}
             <div className="navbar-search-container">
                 <input 
                     type="text" 

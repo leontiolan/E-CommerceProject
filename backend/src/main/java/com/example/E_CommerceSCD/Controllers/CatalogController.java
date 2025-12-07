@@ -37,10 +37,8 @@ public class CatalogController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {
-        // Default sort
         Sort sortOrder = Sort.by("name").ascending();
 
-        // Handle sort options
         if (sort != null) {
             switch (sort.toLowerCase()) {
                 case "price_asc":
