@@ -66,7 +66,6 @@ namespace ECommerceAdminClient.Forms
             }
         }
 
-        // --- UPDATED: Upload Button Click Handler ---
         private async void btnUploadImage_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -83,7 +82,6 @@ namespace ECommerceAdminClient.Forms
 
                     if (!string.IsNullOrEmpty(uploadedFilename))
                     {
-                        // FIX: Use += string concatenation instead of AppendText
                         if (!string.IsNullOrWhiteSpace(txtImages.Text))
                         {
                             txtImages.Text += Environment.NewLine + uploadedFilename;
@@ -100,7 +98,6 @@ namespace ECommerceAdminClient.Forms
                 }
             }
         }
-        // ----------------------------------------
 
         private void btnSave_Click(object sender, EventArgs e)
         {

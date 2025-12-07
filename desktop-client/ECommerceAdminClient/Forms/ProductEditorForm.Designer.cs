@@ -22,7 +22,7 @@
             this.btnSave = new MaterialSkin.Controls.MaterialButton();
             this.btnCancel = new MaterialSkin.Controls.MaterialButton();
             this.txtImages = new MaterialSkin.Controls.MaterialMultiLineTextBox2();
-            this.btnUploadImage = new MaterialSkin.Controls.MaterialButton(); // Added
+            this.btnUploadImage = new MaterialSkin.Controls.MaterialButton();
             this.SuspendLayout();
 
             // txtName
@@ -122,7 +122,7 @@
             this.txtImages.SelectionLength = 0;
             this.txtImages.SelectionStart = 0;
             this.txtImages.ShortcutsEnabled = true;
-            this.txtImages.Size = new System.Drawing.Size(260, 100); // Shrank width to fit button
+            this.txtImages.Size = new System.Drawing.Size(260, 100); 
             this.txtImages.TabIndex = 5;
             this.txtImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.txtImages.UseSystemPasswordChar = false;
@@ -134,7 +134,7 @@
             this.btnUploadImage.Depth = 0;
             this.btnUploadImage.HighEmphasis = true;
             this.btnUploadImage.Icon = null;
-            this.btnUploadImage.Location = new System.Drawing.Point(290, 320); // To the right of text box
+            this.btnUploadImage.Location = new System.Drawing.Point(290, 320);
             this.btnUploadImage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnUploadImage.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnUploadImage.Name = "btnUploadImage";
@@ -191,7 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 500);
-            this.Controls.Add(this.btnUploadImage); // Add to controls
+            this.Controls.Add(this.btnUploadImage); 
             this.Controls.Add(this.txtImages);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -216,6 +216,6 @@
         private MaterialSkin.Controls.MaterialComboBox cmbCategory;
         private MaterialSkin.Controls.MaterialButton btnSave;
         private MaterialSkin.Controls.MaterialButton btnCancel;
-        private MaterialSkin.Controls.MaterialButton btnUploadImage; // Declaration
+        private MaterialSkin.Controls.MaterialButton btnUploadImage; 
     }
 }
